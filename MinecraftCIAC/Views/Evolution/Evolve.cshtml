@@ -1,9 +1,55 @@
-﻿
+﻿@model IEnumerable<MinecraftCIAC.Models.Evolution>
 @{
     ViewBag.Title = "Evolve";
 }
 
+@Html.Raw(TempData["msg"])
+
+
+
 <h2>Evolve</h2>
 
-@Html.Raw(TempData["msg"])
+<div>
+    @Html.ActionLink("Publish", "Publish") |
+    @Html.ActionLink("Return to main page", "Return")
+</div>
+
+@*Champion*@
+
+<div>
+    <video width="320" height="240" src="~/EvolutionDB/video.mp4" controls autoplay />
+</div>
+
+
+@*Poppulation list*@
+<table class="table-striped">
+    <tr>
+
+        <th>
+            Result
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            <video width="320" height="240" src="~/EvolutionDB/video.mp4" controls autoplay />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.ActionLink("Evolve small", "EvolveSmall", new { id = item.ID })
+        </td>
+        <td>
+            @Html.ActionLink("Evolve big", "EvolveBig", new { id = item.ID })
+        </td>
+    </tr>
+    }
+
+
 

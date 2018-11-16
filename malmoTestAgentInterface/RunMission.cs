@@ -36,7 +36,9 @@ class Program
         xmlConfig.Load("..\\..\\..\\minecraft.config.xml");
         experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
         var algorithm = experiment.CreateEvolutionAlgorithm();
+        
         algorithm.StartContinue();
+        
         Console.ReadKey();
     }
     static void ea_UpdateEvent(object sender, EventArgs e)

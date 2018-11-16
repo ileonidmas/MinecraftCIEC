@@ -12,6 +12,8 @@ namespace MinecraftCIAC.Models
 
 
     }
+
+
     public class EvolutionDBContext : DbContext
     {
         public DbSet<Evolution> Evolutions { get; set; }

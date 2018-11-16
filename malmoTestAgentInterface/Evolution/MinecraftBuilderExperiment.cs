@@ -8,8 +8,9 @@ using System.Text;
 
 namespace RunMission.Evolution
 {
-    class MinecraftBuilderExperiment : SimpleNeatExperiment
+    public class MinecraftBuilderExperiment : SimpleNeatExperiment
     {
+
         public MalmoClientPool malmoClientPool;
         private string evaluatorType;
 
@@ -36,6 +37,13 @@ namespace RunMission.Evolution
                 {
                     MinecraftNoveltyEvaluator evaluator = new MinecraftNoveltyEvaluator();
                     evaluator.createFolders();
+                    evaluator.ClientPool = malmoClientPool;
+                    return evaluator;
+                }
+
+                if (evaluatorType == "Simple")
+                {
+                    MinecraftSimpleEvaluator evaluator = new MinecraftSimpleEvaluator();
                     evaluator.ClientPool = malmoClientPool;
                     return evaluator;
                 }
