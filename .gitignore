@@ -1,0 +1,13 @@
+#root folder
+.vs/
+
+
+# Minecraft CIAC folder
+MinecraftCIAC/bin/
+MinecraftCIAC/obj/
+MinecraftCIAC/EvolutionDB/Candidates
+
+# Simulator folder
+malmoTestAgentInterface/bin/
+malmoTestAgentInterface/obj/
+malmoTestAgentInterface/.vs/

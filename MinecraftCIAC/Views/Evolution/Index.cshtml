@@ -1,0 +1,36 @@
+﻿@model IEnumerable<MinecraftCIAC.Models.Evolution>
+@{
+    ViewBag.Title = "Start Evolution";
+}
+
+<div>
+    @Html.ActionLink("Start new evolution", "Evolve") |
+    @Html.ActionLink("Start new evolution with novelty", "Evolve") |
+    @Html.ActionLink("Add dummy", "CreateFake")
+</div>
+
+<table class="table-striped">
+    <tr>
+
+        <th>
+                Result
+            </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            <video width="320" height="240" src="~/EvolutionDB/video.mp4" controls autoplay />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.ActionLink("Delete", "RemoveFake", new { id = item.ID })
+        </td>
+    </tr>
+    }
