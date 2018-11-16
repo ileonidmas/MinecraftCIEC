@@ -1,0 +1,2 @@
+C:\Users\lema\Documents\Github\MinecraftCIEC\obj\x86\Debug\RunMission.csprojAssemblyReference.cache
+C:\Users\lema\Documents\Github\MinecraftCIEC\obj\x86\Debug\RunMission.csproj.CoreCompileInputs.cache
