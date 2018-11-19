@@ -54,9 +54,6 @@ namespace RunMission.Evolution
             if(_stopConditionSatisfied)
                 return new FitnessInfo(0, 0);
 
-
-
-
             bool[] clientInfo = ClientPool.RunAvailableClient(brain);
 
 
