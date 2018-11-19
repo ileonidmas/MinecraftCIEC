@@ -13,9 +13,11 @@ namespace RunMission.Evolution
 
         public MalmoClientPool malmoClientPool;
         private string evaluatorType;
+        private string userName;
 
-        public MinecraftBuilderExperiment(MalmoClientPool clientPool, string evaluator)
+        public MinecraftBuilderExperiment(MalmoClientPool clientPool, string evaluator, string userName)
         {
+            this.userName = userName;
             malmoClientPool = clientPool;
             evaluatorType = evaluator;
         }
@@ -44,6 +46,7 @@ namespace RunMission.Evolution
                 if (evaluatorType == "Simple")
                 {
                     MinecraftSimpleEvaluator evaluator = new MinecraftSimpleEvaluator();
+                    evaluator.userName = userName;
                     evaluator.ClientPool = malmoClientPool;
                     return evaluator;
                 }

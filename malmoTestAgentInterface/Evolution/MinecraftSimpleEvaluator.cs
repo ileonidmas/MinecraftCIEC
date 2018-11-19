@@ -12,6 +12,9 @@ namespace RunMission.Evolution
         private ulong _evalCount;
         private bool _stopConditionSatisfied;
         private MalmoClientPool clientPool;
+        public string userName { get; set; }
+
+
         public MalmoClientPool ClientPool
         {
             get => clientPool;
@@ -50,27 +53,14 @@ namespace RunMission.Evolution
         /// </summary>
         public FitnessInfo Evaluate(IBlackBox brain)
         {
-            // do this because its bugged
-            if(_stopConditionSatisfied)
-                return new FitnessInfo(0, 0);
-
-            bool[] clientInfo = ClientPool.RunAvailableClient(brain);
-
-
-            // Update the evaluation counter.
-            lock(myLock)
+            int evalCount;
+            lock (myLock) {
+                evalCount =(int) _evalCount;
                 _evalCount++;
+            };
 
-
-            // If the networks reaches a fitness of 30, stop evaluation
-            if (_evalCount >= 4)
-            {
-                _stopConditionSatisfied = true;
-                _evalCount = 0;
-            }
-
-            //writeToFile(fitness);
-
+            bool[] clientInfo = ClientPool.RunAvailableClientWithUserName(brain,userName, evalCount.ToString());
+                       
             // Return the fitness score
             return new FitnessInfo(0, 0);
         }

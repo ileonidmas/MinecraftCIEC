@@ -20,6 +20,9 @@ namespace RunMission.Evolution
 
         private bool isWorldCreated = false;
 
+        public string userName { get; set; }
+        public string folderName { get; set; }
+
         public MalmoClient(ClientPool clientPool)
         {
             isWorldCreated = false;
@@ -90,7 +93,7 @@ namespace RunMission.Evolution
                     agentPosition.currentZ = (double)observations.GetValue("ZPos");
                 }
             }
-
+            
             neatPlayer.AgentHelper.AgentPosition = agentPosition;
 
             Thread.Sleep(2000);
@@ -166,7 +169,21 @@ namespace RunMission.Evolution
         {
             try
             {
-                agentHost.startMission(mission, availableClients, new MissionRecordSpec(), 0, "Test Builder");
+
+                mission.requestVideo(320, 240);
+                string userPath = "C://Temp//Users//" + userName + "//";
+                string folderPath = userPath + folderName + "//";
+                if (!Directory.Exists(userPath))
+                {
+                    Directory.CreateDirectory(userPath);
+                }
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                MissionRecordSpec missionRecord = new MissionRecordSpec(folderPath+"data.tgz");
+                missionRecord.recordMP4(30, 400000);  
+                agentHost.startMission(mission, availableClients, missionRecord, 0, "Test Builder");
             }
             catch (Exception ex)
             {

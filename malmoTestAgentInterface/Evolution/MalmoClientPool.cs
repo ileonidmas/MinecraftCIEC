@@ -47,5 +47,27 @@ namespace RunMission.Evolution
 
             return client.GetFitnessGrid();
         }
+
+        public bool[] RunAvailableClientWithUserName(IBlackBox brain, string userName, string folderName)
+        {
+            MalmoClient client = null;
+
+            semaphore.Wait();
+            try
+            {
+                client = new MalmoClient(availableClients);
+                client.folderName = folderName;
+                client.userName = userName;
+                client.RunMalmo(brain);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Client exception (Highly due to stopping while performing movement)!");
+            }
+            semaphore.Release();
+
+
+            return client.GetFitnessGrid();
+        }
     }
 }
