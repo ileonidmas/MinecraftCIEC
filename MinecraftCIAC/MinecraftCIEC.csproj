@@ -57,7 +57,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Redzen">
-      <HintPath>..\malmoTestAgentInterface\packages\Redzen.7.2.3\lib\netstandard2.0\Redzen.dll</HintPath>
+      <HintPath>..\packages\Redzen.7.2.3\lib\netstandard2.0\Redzen.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

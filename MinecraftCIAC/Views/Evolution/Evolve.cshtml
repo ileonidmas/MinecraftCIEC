@@ -43,10 +43,10 @@
             @Html.DisplayFor(modelItem => item.ID)
         </td>
         <td>
-            @Html.ActionLink("Evolve small", "EvolveSmall", new { id = item.ID })
+            @Html.ActionLink("Evolve small", "Evolve", new { id = item.ID, fitness = 2 })
         </td>
         <td>
-            @Html.ActionLink("Evolve big", "EvolveBig", new { id = item.ID })
+            @Html.ActionLink("Evolve big", "Evolve", new { id = item.ID, fitness = 10 })
         </td>
     </tr>
     }

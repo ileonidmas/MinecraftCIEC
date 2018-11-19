@@ -10,6 +10,13 @@ namespace MinecraftCIAC.Global
 {
     public static class GloabalVariables
     {
+        #region 
+
+        public static readonly int NUMBER_OF_AGENTS = 2;
+
+        #endregion
+
+
         private static MalmoClientPool malmoClientPool;
         public static MalmoClientPool MalmoClientPool
         {
@@ -17,7 +24,7 @@ namespace MinecraftCIAC.Global
             {
                 if (malmoClientPool == null)
                 {
-                    malmoClientPool = new MalmoClientPool(2);
+                    malmoClientPool = new MalmoClientPool(NUMBER_OF_AGENTS);
                 }
                 return malmoClientPool;
             }

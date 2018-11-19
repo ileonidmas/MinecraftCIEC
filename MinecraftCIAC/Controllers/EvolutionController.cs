@@ -1,6 +1,7 @@
 ﻿using MinecraftCIAC.Models;
 using RunMission.Evolution;
 using SharpNeat.Core;
+using SharpNeat.EvolutionAlgorithms;
 using SharpNeat.Genomes.Neat;
 using System;
 using System.Collections.Generic;
@@ -31,45 +32,57 @@ namespace MinecraftCIAC.Controllers
             //return View();
         }
 
-        public ActionResult Evolve()
+        public ActionResult Evolve(int id = -1, int fitness = -1)
         {
             MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
+            MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple");
+            XmlDocument xmlConfig = new XmlDocument();
+            if (System.Environment.UserName == "lema")
+                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            else
+                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
 
-            var algorithm = Global.GloabalVariables.EvolutionAlgorithm;
 
-            if (algorithm == null)
+            experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
+            NeatEvolutionAlgorithm<NeatGenome> algorithm;
+
+            if (id != -1)
             {
-                MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple");
+                var reader = XmlReader.Create("C:\\Temp\\tempPopulation.xml");
+                var list = experiment.LoadPopulation(reader);
+                foreach (var genome in list)
+                {
+                    genome.EvaluationInfo.SetFitness(0);
+                }
+                list[id].EvaluationInfo.SetFitness(fitness);
+                reader.Close();
 
-                XmlDocument xmlConfig = new XmlDocument();
-                if (System.Environment.UserName == "lema")
-                    xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-                else
-                    xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+                algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory,list);
 
-                experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
+                algorithm.StartContinue();
+                Thread.Sleep(1000);
+                algorithm.RequestPause();
+                while (algorithm.RunState != RunState.Paused)
+                {
+                    Thread.Sleep(100);
+                }
+            } else
+            {
                 algorithm = experiment.CreateEvolutionAlgorithm();
-
-                Global.GloabalVariables.EvolutionAlgorithm = algorithm;
             }
 
-            //algorithm.StartContinue();
+            
 
-            //while (!algorithm.StopConditionSatisfied)
-            //{
-            //    Thread.Sleep(10);
-            //}
+            
+            
+            // do loading screen here
 
-            //algorithm.Stop();
-
-            algorithm.RequestPause();
-
-            //var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
-            //doc.Save("C:\\Temp\\tempPopulation.xml");
+            var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
+            doc.Save("C:\\Temp\\tempPopulation.xml");
             TempData["msg"] = "<script>alert('Happy thoughts');</script>";
             List<Evolution> evolutions = new List<Evolution>();
-            for(int i = 0;i<4; i++)
+            for(int i = 0;i< algorithm.GenomeList.Count; i++)
             {
                 Evolution evolution = new Evolution() { ID = i, DirectoryPath = "~/EvolutionDB/video.mp4", BranchID = i };
                 evolutions.Add(evolution);
@@ -77,40 +90,8 @@ namespace MinecraftCIAC.Controllers
             
             return View(evolutions);
         }
+       
 
-        public ActionResult EvolveSmall(int id)
-        {
-            var algorithm = Global.GloabalVariables.EvolutionAlgorithm;
-
-            //MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
-            //MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple");
-            //XmlDocument xmlConfig = new XmlDocument();
-            //if (System.Environment.UserName == "lema")
-            //    xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            //else
-            //    xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            //experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
-
-            //var list = NeatGenomeXmlIO.ReadCompleteGenomeList(XmlReader.Create("C:\\Temp\\tempPopulation.xml"), false);
-
-            //var algorithm = experiment.CreateEvolutionAlgorithm();
-            
-            //foreach(var item in list)
-            //{
-            //    algorithm.GenomeList.Add(item);
-            //}
-
-            //algorithm.GenomeList[id].EvaluationInfo.SetFitness(2);
-
-            algorithm.StartContinue();
-
-            return RedirectToAction("Evolve");
-        }
-
-        public ActionResult EvolveBig()
-        {
-            return View();
-        }
 
         public ActionResult Return()
         {
