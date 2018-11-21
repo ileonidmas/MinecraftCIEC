@@ -83,7 +83,7 @@ namespace MinecraftCIAC.Controllers
                     indexOfChamp++;
                 }
 
-
+                algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory,list);                
                 algorithm.StartContinue();
                 Thread.Sleep(1000);
                 algorithm.RequestPause();
@@ -93,6 +93,8 @@ namespace MinecraftCIAC.Controllers
                 }
             } else
             {
+
+                RunMission.Evolution.FileUtility.CreateUserFolder(username);
                 algorithm = experiment.CreateEvolutionAlgorithm();
             }
 
@@ -165,10 +167,8 @@ namespace MinecraftCIAC.Controllers
         public ActionResult Publish()
         {
 
-            //save to db
-
-
-
+            // save to candidate path
+            FileUtility.SaveCurrentProgress("Leo");
 
             return RedirectToAction("Index");
         }
