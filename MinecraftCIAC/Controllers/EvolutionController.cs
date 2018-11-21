@@ -30,7 +30,7 @@ namespace MinecraftCIAC.Controllers
            // var ip = getIPAddress(HttpContext.Request);
             
             var list = db.Evolutions.ToList();
-            list.ElementAt(0).DirectoryPath = "video.mp4";
+            //list.ElementAt(0).DirectoryPath = "video.mp4";
 
             return View(list);            
             //return View();
@@ -111,7 +111,7 @@ namespace MinecraftCIAC.Controllers
                 {
                     videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
                 }
-                Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username,folderName), BranchID = i };
+                Evolution evolution = new Evolution() {DirectoryPath = FileUtility.GetUserResultVideoPath(username,folderName), BranchID = i };
                 evolutions.Add(evolution);
             }
             
@@ -158,8 +158,14 @@ namespace MinecraftCIAC.Controllers
         {
 
             // save to candidate path
-            FileUtility.SaveCurrentProgress("Leo");
+            string evolutionPath = FileUtility.SaveCurrentProgressAndReturnPath("Leo");
+            string videoPath = FileUtility.GetVideoPathFromEvolutionPath(evolutionPath);
+            // add stuff to database
 
+            int count = db.Evolutions.Count() + 1;
+            db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = evolutionPath, ParentVideoPath = videoPath});
+
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

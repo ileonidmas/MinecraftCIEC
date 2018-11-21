@@ -114,7 +114,7 @@ namespace RunMission.Evolution
             Directory.CreateDirectory(userPath);
         }
 
-        public static void SaveCurrentProgress(string username)
+        public static string SaveCurrentProgressAndReturnPath(string username)
         {
             string userPath = candidatePath + "/" + username;
             int count = 0;
@@ -126,8 +126,20 @@ namespace RunMission.Evolution
 
             string generationPath = resultsPath + "/" + username;
 
-            Directory.Move(generationPath, userPath + "/" + count.ToString());
-            
+            string finalPath = userPath + "/" + count.ToString();
+            Directory.Move(generationPath, finalPath);
+
+            //return path evolution
+
+            return finalPath;
+        }
+
+        public static string GetVideoPathFromEvolutionPath(string evolutionPath)
+        {
+
+            string extraFolderName = Path.GetFileName(Directory.GetDirectories(evolutionPath + "/0/data")[0]);
+
+            return evolutionPath + "/0/data/"+ extraFolderName + "/video.mp4" ;
         }
     }
 }

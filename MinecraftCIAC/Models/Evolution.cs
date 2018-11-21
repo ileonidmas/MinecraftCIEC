@@ -10,6 +10,10 @@ namespace MinecraftCIAC.Models
 
         public string DirectoryPath { get; set; }
 
+        public string ParentVideoPath { get; set; }
+
+        public string Username { get; set; }
+
 
     }
 
