@@ -15,7 +15,7 @@ namespace RunMission.Evolution
 
         //private readonly static string resultsPath = "";
         private readonly static string resultsPath = System.AppDomain.CurrentDomain.BaseDirectory + "/Results/Users";
-
+        private readonly static string candidatePath = System.AppDomain.CurrentDomain.BaseDirectory + "/EvolutionDB/Candidates";
 
         public static string CreateOutputDirectory(string username, string foldername)
         {
@@ -114,5 +114,20 @@ namespace RunMission.Evolution
             Directory.CreateDirectory(userPath);
         }
 
+        public static void SaveCurrentProgress(string username)
+        {
+            string userPath = candidatePath + "/" + username;
+            int count = 0;
+            //check if exists and then create if doesnt
+            if (Directory.Exists(userPath))
+                count = Directory.GetDirectories(userPath).Length;
+            else
+                Directory.CreateDirectory(userPath);
+
+            string generationPath = resultsPath + "/" + username;
+
+            Directory.Move(generationPath, userPath + "/" + count.ToString());
+            
+        }
     }
 }
