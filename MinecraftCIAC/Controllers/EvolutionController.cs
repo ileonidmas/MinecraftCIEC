@@ -62,16 +62,28 @@ namespace MinecraftCIAC.Controllers
                 }
                 list[id].EvaluationInfo.SetFitness(fitness);
                 reader.Close();
-                
-                //copy files to 0 folder and if 0 do nothing
-                if (id != 0)
-                {
-                    string folderName = id.ToString();
-                    FileUtility.CopyCanditateToParentFolder(username, folderName);
-                }
+
+                ////copy files to 0 folder and if 0 do nothing
+                //if (id != 0)
+                //{
+                //    string folderName = id.ToString();
+                //    FileUtility.CopyCanditateToParentFolder(username, folderName);
+                //}
 
 
                 algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory,list);
+
+                int indexOfChamp = 0;
+                foreach (var genome in list)
+                {
+                    if (genome.Id == algorithm.CurrentChampGenome.Id && algorithm.CurrentChampGenome.Id != 0)
+                    {
+                        FileUtility.CopyCanditateToParentFolder(username, indexOfChamp.ToString());
+                    }
+                    indexOfChamp++;
+                }
+
+
                 algorithm.StartContinue();
                 Thread.Sleep(1000);
                 algorithm.RequestPause();
@@ -84,11 +96,9 @@ namespace MinecraftCIAC.Controllers
                 algorithm = experiment.CreateEvolutionAlgorithm();
             }
 
-            
 
-            
-            
             // do loading screen here
+
 
             var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
             doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
