@@ -1,5 +1,4 @@
-﻿using ICSharpCode.SharpZipLib.GZip;
-using MinecraftCIAC.Models;
+﻿using MinecraftCIAC.Models;
 using RunMission.Evolution;
 using SharpNeat.Core;
 using SharpNeat.EvolutionAlgorithms;
@@ -17,7 +16,6 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.IO;
 using System.Xml;
-using ICSharpCode.SharpZipLib.Tar;
 
 namespace MinecraftCIAC.Controllers
 {
@@ -32,6 +30,7 @@ namespace MinecraftCIAC.Controllers
            // var ip = getIPAddress(HttpContext.Request);
             
             var list = db.Evolutions.ToList();
+            list.ElementAt(0).DirectoryPath = "video.mp4";
 
             return View(list);            
             //return View();
@@ -53,8 +52,9 @@ namespace MinecraftCIAC.Controllers
             NeatEvolutionAlgorithm<NeatGenome> algorithm;
 
             if (id != -1)
-            {
-                var reader = XmlReader.Create("C:\\Temp\\tempPopulation.xml");
+            {            
+                // read current poppulation
+                var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
                 var list = experiment.LoadPopulation(reader);
                 foreach (var genome in list)
                 {
@@ -62,10 +62,16 @@ namespace MinecraftCIAC.Controllers
                 }
                 list[id].EvaluationInfo.SetFitness(fitness);
                 reader.Close();
+                
+                //copy files to 0 folder and if 0 do nothing
+                if (id != 0)
+                {
+                    string folderName = id.ToString();
+                    FileUtility.CopyCanditateToParentFolder(username, folderName);
+                }
+
 
                 algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory,list);
-
-
                 algorithm.StartContinue();
                 Thread.Sleep(1000);
                 algorithm.RequestPause();
@@ -85,7 +91,7 @@ namespace MinecraftCIAC.Controllers
             // do loading screen here
 
             var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
-            doc.Save("C:\\Temp\\tempPopulation.xml");
+            doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
             TempData["msg"] = "<script>alert('Happy thoughts');</script>";
             List<Evolution> evolutions = new List<Evolution>();
 
@@ -93,31 +99,24 @@ namespace MinecraftCIAC.Controllers
 
             for(int i = 0;i< algorithm.GenomeList.Count; i++)
             {
-                MakeVideo("C:\\Temp\\Users\\"+username+"\\"+ i.ToString()+"\\"+"data.tgz", "C:\\Temp\\Users\\" + username + "\\" + i.ToString()+"\\data");
-                Evolution evolution = new Evolution() { ID = i, DirectoryPath = "~/EvolutionDB/video.mp4", BranchID = i };
+                string folderName = i.ToString();
+                string videoPath = "";
+                if (id != -1 && i == 0)
+                {
+                    videoPath = FileUtility.GetParentVideo(username, "0");
+                }
+                else
+                {
+                    videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
+                }
+                Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username,folderName), BranchID = i };
                 evolutions.Add(evolution);
             }
-
-           // MakeVideo("C:\\Temp\\saved_data.tgz", "C:\\Temp\\Results");
-
-
+            
             return View(evolutions);
         }
 
-        private void MakeVideo(string archiveName, string destFolder)
-        {
-            //Stream inStream = File.OpenRead(archiveName);
-            var inStream = new FileStream(archiveName, FileMode.Open);
-            Stream gzipStream = new GZipInputStream(inStream);
-
-            TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
-            tarArchive.ExtractContents(destFolder);
-            tarArchive.Close();
-
-            gzipStream.Close();
-            inStream.Close();
-
-        }
+        /*
         public static string getIPAddress(HttpRequestBase request)
         {
             string szRemoteAddr = request.UserHostAddress;
@@ -146,7 +145,7 @@ namespace MinecraftCIAC.Controllers
             }
             return szIP;
         }
-
+        */
 
         public ActionResult Return()
         {

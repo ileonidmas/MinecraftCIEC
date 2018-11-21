@@ -171,18 +171,9 @@ namespace RunMission.Evolution
             {
 
                 mission.requestVideo(320, 240);
-                string userPath = "C://Temp//Users//" + userName + "//";
-                string folderPath = userPath + folderName + "//";
-                if (!Directory.Exists(userPath))
-                {
-                    Directory.CreateDirectory(userPath);
-                }
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-                MissionRecordSpec missionRecord = new MissionRecordSpec(folderPath+"data.tgz");
-                missionRecord.recordMP4(30, 400000);  
+                var outputDirectory = FileUtility.CreateOutputDirectory(userName, folderName);
+                MissionRecordSpec missionRecord = new MissionRecordSpec(outputDirectory + "data.tgz");
+                missionRecord.recordMP4(60, 400000);
                 agentHost.startMission(mission, availableClients, missionRecord, 0, "Test Builder");
             }
             catch (Exception ex)

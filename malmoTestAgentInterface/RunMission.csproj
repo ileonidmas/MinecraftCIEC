@@ -73,6 +73,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -92,6 +95,7 @@
     <Compile Include="AgentHelper.cs" />
     <Compile Include="Evolution\AgentPosition.cs" />
     <Compile Include="Evolution\Enums\Direction.cs" />
+    <Compile Include="Evolution\FileUtility.cs" />
     <Compile Include="Evolution\MalmoClient.cs" />
     <Compile Include="Evolution\MalmoClientPool.cs" />
     <Compile Include="Evolution\MinecraftFitnessEvaluator.cs" />

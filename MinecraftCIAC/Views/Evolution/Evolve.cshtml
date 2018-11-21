@@ -17,7 +17,7 @@
 @*Champion*@
 
 <div>
-    <video width="320" height="240" src="~/EvolutionDB/video.mp4" controls autoplay />
+    <video width="320" height="240" src="~/Results/Users/@Model.ElementAt(0).DirectoryPath" controls autoplay />
 </div>
 
 
@@ -37,7 +37,7 @@
     {
     <tr>
         <td>
-            <video width="320" height="240" src="~/EvolutionDB/video.mp4" controls autoplay />
+            <video width="320" height="240" src="~/Results/Users/@item.DirectoryPath" controls autoplay />
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ID)

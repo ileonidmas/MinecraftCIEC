@@ -46,7 +46,7 @@ namespace RunMission.Evolution
                 if (evaluatorType == "Simple")
                 {
                     MinecraftSimpleEvaluator evaluator = new MinecraftSimpleEvaluator();
-                    evaluator.userName = userName;
+                    evaluator.username = userName;
                     evaluator.ClientPool = malmoClientPool;
                     return evaluator;
                 }

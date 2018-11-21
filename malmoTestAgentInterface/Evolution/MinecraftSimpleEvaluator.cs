@@ -12,7 +12,7 @@ namespace RunMission.Evolution
         private ulong _evalCount;
         private bool _stopConditionSatisfied;
         private MalmoClientPool clientPool;
-        public string userName { get; set; }
+        public string username { get; set; }
 
 
         public MalmoClientPool ClientPool
@@ -59,7 +59,20 @@ namespace RunMission.Evolution
                 _evalCount++;
             };
 
-            bool[] clientInfo = ClientPool.RunAvailableClientWithUserName(brain,userName, evalCount.ToString());
+            string foldername = evalCount.ToString();
+            var isFirstIteration = FileUtility.IsFirstIteration(username, foldername);
+
+            if (!isFirstIteration)
+            {
+                evalCount++;
+                foldername = evalCount.ToString();
+                // remove old
+                FileUtility.RemoveOldFolder(username, foldername);
+            }
+
+            
+
+            bool[] clientInfo = ClientPool.RunAvailableClientWithUserName(brain,username, foldername);
                        
             // Return the fitness score
             return new FitnessInfo(0, 0);

@@ -13,6 +13,7 @@ namespace MinecraftCIAC
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            RunMission.Evolution.FileUtility.CreateUserFolder("Leo");
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
