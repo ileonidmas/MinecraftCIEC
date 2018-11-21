@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,8 @@ namespace RunMission.Evolution
     {
 
         //private readonly static string resultsPath = "";
-        private readonly static string resultsPath = "C:/Users/lema/Documents/Github/MinecraftCIEC/MinecraftCIAC/Results/Users";
+        private readonly static string resultsPath = System.AppDomain.CurrentDomain.BaseDirectory + "/Results/Users";
+
 
         public static string CreateOutputDirectory(string username, string foldername)
         {
