@@ -5,8 +5,7 @@
 
 <div>
     @Html.ActionLink("Start new evolution", "Evolve") |
-    @Html.ActionLink("Start new evolution with novelty", "Evolve") |
-    @Html.ActionLink("Add dummy", "CreateFake")
+    @Html.ActionLink("Start new evolution with novelty", "Evolve") 
 </div>
 
 <table class="table-striped">
@@ -24,13 +23,13 @@
     {
     <tr>
         <td>
-            <video width="320" height="240" src=@item.ParentVideoPath controls autoplay />            
+            <video width="320" height="240"  src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />            
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ID)
         </td>
         <td>
-            @Html.ActionLink("Delete", "RemoveFake", new { id = item.ID })
+            @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath })
         </td>
     </tr>
     }

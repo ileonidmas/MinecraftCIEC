@@ -30,12 +30,18 @@ namespace MinecraftCIAC.Controllers
            // var ip = getIPAddress(HttpContext.Request);
             
             var list = db.Evolutions.ToList();
+            foreach (var evolution in list)
+            {
+                string result = Path.GetFileName(evolution.DirectoryPath);
+                string path = FileUtility.GetUserDBVideoPath("Leo", result);
+                evolution.ParentVideoPath = path;
+            }
             //list.ElementAt(0).DirectoryPath = "video.mp4";
 
             return View(list);            
             //return View();
         }
-
+                
         public ActionResult Evolve(int id = -1, int fitness = -1)
         {
             MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
@@ -115,13 +121,13 @@ namespace MinecraftCIAC.Controllers
                 string videoPath = "";
                 if (id != -1 && i == 0)
                 {
-                    videoPath = FileUtility.GetParentVideo(username, "0");
+                    videoPath = FileUtility.GetVideoPathWithoutDecoding(username, "0");
                 }
                 else
                 {
                     videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
                 }
-                Evolution evolution = new Evolution() {DirectoryPath = FileUtility.GetUserResultVideoPath(username,folderName), BranchID = i };
+                Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username,folderName), BranchID = i };
                 evolutions.Add(evolution);
             }
             
@@ -159,6 +165,48 @@ namespace MinecraftCIAC.Controllers
         }
         */
 
+
+        public ActionResult Continue(string filesLocation)
+        {
+            //get username
+            string username = "Leo";
+
+            //create clean user folder in results
+            RunMission.Evolution.FileUtility.CreateUserFolder(username);
+
+            // move files to username folder in Results
+            FileUtility.CopyFilesToUserFolder(filesLocation, username);
+            
+            //recreate experiment to load poppulation
+            MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
+            MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
+            XmlDocument xmlConfig = new XmlDocument();
+            if (System.Environment.UserName == "lema")
+                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            else
+                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
+
+            // read current poppulation
+            var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
+            var list = experiment.LoadPopulation(reader);
+            reader.Close();
+
+            //load video files
+            List<Evolution> evolutions = new List<Evolution>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                string folderName = i.ToString();
+                string videoPath = "";
+                videoPath = FileUtility.GetVideoPathWithoutDecoding(username, i.ToString());
+                Evolution evolution = new Evolution() { ID = i , DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                evolutions.Add(evolution);
+            }
+            return View("Evolve", evolutions);
+
+            return View(evolutions);
+        }
+
         public ActionResult Return()
         {
             return RedirectToAction("Index");
@@ -179,25 +227,9 @@ namespace MinecraftCIAC.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult CreateFake()
-        {
-            int count = db.Evolutions.Count() + 1;
-            db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = "" });
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+       
 
-        public ActionResult RemoveFake(int id)
-        {
-            
-            int count = db.Evolutions.Count();
-            if (count == 0)
-                return RedirectToAction("Index");
-            Evolution evolution = db.Evolutions.Find(id);
-            db.Evolutions.Remove(evolution);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+       
         protected override void Dispose(bool disposing)
         {
             if (disposing)

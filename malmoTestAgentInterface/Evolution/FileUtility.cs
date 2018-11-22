@@ -32,7 +32,7 @@ namespace RunMission.Evolution
         }
 
 
-        public static string GetParentVideo(string username, string foldername)
+        public static string GetVideoPathWithoutDecoding(string username, string foldername)
         {
 
             string destinationFolder = resultsPath + "/" + username + "/" + foldername + "/" + "data";
@@ -76,6 +76,28 @@ namespace RunMission.Evolution
         {
             string extraFolderName =Path.GetFileName( Directory.GetDirectories(GetUserResultPath(username) + "/" + foldername + "/data")[0]);
             return username + "/" + foldername + "/data/"+ extraFolderName + "/video.mp4";
+        }
+
+        public static string GetUserDBVideoPath(string username, string foldername)
+        {
+            string extraFolderName = Path.GetFileName(Directory.GetDirectories(candidatePath + "/" + username + "/" + foldername + "/0/data")[0]);
+            string path =username + "/" + foldername + "/0/data/" + extraFolderName + "/video.mp4";
+            return path;
+        }
+
+        public static void CopyFilesToUserFolder(string filesLocation, string username)
+        {
+            string source = candidatePath + "/" + username+ "/" + Path.GetFileName(filesLocation);
+            string dest = resultsPath + "/" + username;
+            //Now Create all of the directories
+            foreach (string dirPath in Directory.GetDirectories(source, "*",
+                SearchOption.AllDirectories))
+                Directory.CreateDirectory(dirPath.Replace(source, dest));
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (string newPath in Directory.GetFiles(source, "*.*",
+                SearchOption.AllDirectories))
+                File.Copy(newPath, newPath.Replace(source, dest), true);
         }
 
         public static bool IsFirstIteration(string username, string foldername)
