@@ -122,10 +122,21 @@ namespace RunMission.Evolution
 
         public static void CopyCanditateToParentFolder(string username, string foldername)
         {
+            if (foldername == "0")
+                return;
             string fullPath = resultsPath + "/" + username + "/" + foldername;
             string oldPath = resultsPath + "/" + username + "/0" ;
             Directory.Delete(oldPath, true);
             Directory.Move(fullPath, oldPath);
+        }
+
+        public static void CopyCanditateToProperFolder(string username, string currentfoldername, string newfoldername)
+        {
+            string source = resultsPath + "/" + username + "/" + currentfoldername;
+            string dest = resultsPath + "/" + username + "/" + newfoldername;
+            if(Directory.Exists(dest))
+                Directory.Delete(dest, true);
+            Directory.Move(source, dest);
         }
 
         public static void CreateUserFolder(string username)

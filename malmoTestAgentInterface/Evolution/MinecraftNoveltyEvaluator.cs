@@ -36,6 +36,7 @@ namespace RunMission.Evolution
             private Dictionary<ulong, int> distanceDictionary = new Dictionary<ulong, int>();
             private int distanceCount = 0;
             private int generation = 1;
+            private int counter = 0;
 
             public MalmoClientPool ClientPool
             {
@@ -77,7 +78,7 @@ namespace RunMission.Evolution
                 int evalCount;
                 lock (myLock)
                 {
-                    evalCount = (int)_evalCount + 5;
+                    evalCount = (int)_evalCount + 100;
                     _evalCount++;
                 };
 
@@ -88,7 +89,7 @@ namespace RunMission.Evolution
 
                 int fitness = 0;
 
-                while (currentGenerationArchive.Count < 2) {
+                while (currentGenerationArchive.Count < POPULATION_SIZE) {
                     Thread.Sleep(1000);
                 }
 
@@ -101,16 +102,18 @@ namespace RunMission.Evolution
                 if (noveltyDistance > NOVELTY_THRESHOLD)
                 {
                     lock(myLock2){
+                        counter++;
                         novelBehaviourArchive.Add(structureGrid);
                         newNovelBehaviourArchive.Add(structureGrid);
-                        if (newNovelBehaviourArchive.Count == 2)
+                        if (newNovelBehaviourArchive.Count == POPULATION_SIZE)
                             _stopConditionSatisfied = true;
                     }
                     FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
+                    FileUtility.CopyCanditateToProperFolder(username,foldername,counter.ToString());
                     Console.WriteLine(noveltyDistance);
                 }
 
-                while(distanceCount != 2)
+                while(distanceCount != POPULATION_SIZE)
                 {
 
                 }
