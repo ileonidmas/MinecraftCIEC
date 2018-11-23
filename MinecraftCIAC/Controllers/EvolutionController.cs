@@ -16,6 +16,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.IO;
 using System.Xml;
+using RunMission.Evolution.RunMission.Evolution;
 
 namespace MinecraftCIAC.Controllers
 {
@@ -49,7 +50,7 @@ namespace MinecraftCIAC.Controllers
         /// <param name="id">Indicates if its a new evolution or not. Id of chosen individual by CIEC</param>
         /// <param name="fitness">Fitness given by user input for the chosen individual</param>
         /// <param name="novelty">Indicates whether or not to perform novelty search</param>
-        public ActionResult Evolve(int id = -1, int fitness = -1, int isNovelty = 0)
+        public ActionResult Evolve(int id = -1, int fitness = 0)
         {
             // Get username for this evolution
             string username = "Leo";//Request.UserHostAddress;
@@ -58,7 +59,14 @@ namespace MinecraftCIAC.Controllers
             MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
 
             // Initialize the experiment and the evaluator object (MinecraftSimpleEvaluator)
-            MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
+            MinecraftBuilderExperiment experiment;
+            if (fitness < 0)
+            {
+                experiment = new MinecraftBuilderExperiment(clientPool, "Novelty", username);
+            } else
+            {
+                experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
+            }
             XmlDocument xmlConfig = new XmlDocument();
             if (System.Environment.UserName == "lema")
                 xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
@@ -70,50 +78,93 @@ namespace MinecraftCIAC.Controllers
             // The evolutionary algorithm object
             NeatEvolutionAlgorithm<NeatGenome> algorithm;
 
-            //Perform CIEC evolution
-            if (id != -1 && isNovelty == 0)
-            {            
-                // read current population and set fitness of the chosen genome
-                var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
-                var list = experiment.LoadPopulation(reader);
-                foreach (var genome in list)
+            if (id != -1)
+            {
+                if (fitness < 0)
                 {
-                    genome.EvaluationInfo.SetFitness(0);
-                }
-                list[id].EvaluationInfo.SetFitness(fitness);
-                reader.Close();
+                    //do novelty
 
-                // Initialize algorithm object using the current generation
-                algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory,list);
+                    //load population
+                    var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
+                    
+                    var list = experiment.LoadPopulation(reader);
 
-                // Copy video files of the generation champion into the parent folder and delete the other 
-                // folders to allow for new candidate videos
-                int indexOfChamp = 0;
-                foreach (var genome in list)
-                {
-                    if (genome.Id == algorithm.CurrentChampGenome.Id && algorithm.CurrentChampGenome.Id != 0)
+                    foreach (var genome in list)
                     {
-                        FileUtility.CopyCanditateToParentFolder(username, indexOfChamp.ToString());
+                        genome.EvaluationInfo.SetFitness(0);
                     }
-                    indexOfChamp++;
-                }
-                
-                // Perform evaluation of a generation. Pause shortly after to ensure that the algorithm only
-                // evaluates one generation
-                algorithm.StartContinue();
-                Thread.Sleep(1000);
-                algorithm.RequestPause();
+                    list[id].EvaluationInfo.SetFitness(10);
+                    reader.Close();
 
-                // Wait for the evaluation of the generation to be done
-                while (algorithm.RunState != RunState.Paused)
+                    // add novel structure to archive
+                    FileUtility.SaveNovelStructure(username, id.ToString());
+
+                    //save chosen to parent
+                    FileUtility.CopyCanditateToParentFolder(username, id.ToString());
+
+                    // Initialize algorithm object using the current generation
+                    algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory, list);
+
+                    // Copy video files of the generation champion into the parent folder and delete the other 
+                    // folders to allow for new candidate videos
+
+                    algorithm.StartContinue();
+                    while (algorithm.RunState != RunState.Paused)
+                    {
+                        Thread.Sleep(100);
+                    }
+                }
+                else
                 {
-                    Thread.Sleep(100);
-                }
-            } else if (id != -1 && isNovelty == 1)  // Perform Novelty Search
-            {
+                    // do simple ciec
 
-            } else  // Start new evolution
+                    // read current population and set fitness of the chosen genome
+                    var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
+                    var list = experiment.LoadPopulation(reader);
+                    foreach (var genome in list)
+                    {
+                        genome.EvaluationInfo.SetFitness(0);
+                    }
+                    list[id].EvaluationInfo.SetFitness(fitness);
+                    reader.Close();
+
+                    // add novel structure to archive
+                    FileUtility.SaveNovelStructure(username, id.ToString());
+
+                    // Initialize algorithm object using the current generation
+                    algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory, list);
+
+                    // Copy video files of the generation champion into the parent folder and delete the other 
+                    // folders to allow for new candidate videos
+                    int indexOfChamp = 0;
+                    foreach (var genome in list)
+                    {
+                        if (genome.Id == algorithm.CurrentChampGenome.Id && algorithm.CurrentChampGenome.Id != 0)
+                        {
+                            FileUtility.CopyCanditateToParentFolder(username, indexOfChamp.ToString());
+                        }
+                        indexOfChamp++;
+                    }
+
+                    // Perform evaluation of a generation. Pause shortly after to ensure that the algorithm only
+                    // evaluates one generation
+                    algorithm.StartContinue();
+                    Thread.Sleep(1000);
+                    algorithm.RequestPause();
+
+                    // Wait for the evaluation of the generation to be done
+                    while (algorithm.RunState != RunState.Paused)
+                    {
+                        Thread.Sleep(100);
+                    }
+                    
+                }
+            } else
             {
+                // start simple ciec
+
+
+
                 // Create folders for the user
                 FileUtility.CreateUserFolder(username);
 

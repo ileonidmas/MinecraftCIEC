@@ -4,8 +4,7 @@
 }
 
 <div>
-    @Html.ActionLink("Start new evolution", "Evolve") |
-    @Html.ActionLink("Start new evolution with novelty", "Evolve") 
+    @Html.ActionLink("Start new evolution", "Evolve") 
 </div>
 
 <table class="table-striped">
@@ -17,8 +16,7 @@
         <th>
             @Html.DisplayNameFor(model => model.ID)
         </th>
-    </tr>
-
+    </tr>    
     @foreach (var item in Model)
     {
     <tr>

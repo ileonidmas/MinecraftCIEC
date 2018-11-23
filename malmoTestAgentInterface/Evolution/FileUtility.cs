@@ -163,5 +163,61 @@ namespace RunMission.Evolution
 
             return evolutionPath + "/0/data/"+ extraFolderName + "/video.mp4" ;
         }
+
+
+        public static void SaveCurrentStructure(string username, string foldername, bool[] structure)
+        {
+            string path = resultsPath + "/" + username + "/" + foldername + "/structure.txt";
+
+            //Create the file and save all values to the file
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                // Run through the structure grid and save all values to the file
+                for (int j = 0; j < structure.Length; j++)
+                {
+                    if (structure[j])
+                        sw.Write("1");
+                    else
+                        sw.Write("0");
+                }
+                sw.WriteLine();
+            }
+        }
+
+        public static void SaveNovelStructure(string username, string foldername)
+        {
+            string source = resultsPath + "/" + username + "/" + foldername + "/structure.txt";
+            string dest = resultsPath + "/" + username + "/" + "/structureArchive.txt";
+
+            string structure = "";
+
+            using(StreamReader sr = new StreamReader(source))
+            {
+                structure = sr.ReadLine();
+            }
+
+            using(StreamWriter sw = new StreamWriter(dest, true))
+            {
+                sw.WriteLine(structure);
+            }
+        }
+
+        public static List<bool[]> LoadStructures(string username)
+        {
+            string path = resultsPath + "/" + username + "/structureArchive.txt";
+            List<bool[]> structures = new List<bool[]>();
+            using (StreamReader sr = new StreamReader(path))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    bool[] structure = line.Select(c => c == '1').ToArray();
+                    structures.Add(structure);
+                }
+
+            }
+            return structures;
+
+        }
     }
 }

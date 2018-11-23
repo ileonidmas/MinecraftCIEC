@@ -28,16 +28,12 @@ namespace RunMission.Evolution
         public override IPhenomeEvaluator<IBlackBox> PhenomeEvaluator
         {
             get {
-                if (evaluatorType == "Fitness")
-                {
-                    MinecraftFitnessEvaluator evaluator = new MinecraftFitnessEvaluator();
-                    evaluator.ClientPool = malmoClientPool;
-                    return evaluator;
-                }
 
                 if (evaluatorType == "Novelty")
                 {
                     MinecraftNoveltyEvaluator evaluator = new MinecraftNoveltyEvaluator();
+                    evaluator.username = userName;
+                    evaluator.LoadStructures(userName);
                     evaluator.createFolders();
                     evaluator.ClientPool = malmoClientPool;
                     return evaluator;

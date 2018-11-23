@@ -21,14 +21,17 @@ namespace RunMission.Evolution
     {
         public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox>
         {
-            private readonly int NOVELTY_THRESHOLD = 5;
-            private readonly int NOVELTY_KNEARSEST = 5;
+            private readonly int NOVELTY_THRESHOLD = 1;
+            private readonly int NOVELTY_KNEARSEST = 2;
+            private readonly int POPULATION_SIZE = 2;
             private ulong _evalCount;
             private bool _stopConditionSatisfied;
             private MalmoClientPool clientPool;
-            
+            public string username { get; set; }
+
             private string noveltyArchivePath;
             private List<bool[]> novelBehaviourArchive = new List<bool[]>();
+            private List<bool[]> newNovelBehaviourArchive = new List<bool[]>();
             private List<bool[]> currentGenerationArchive = new List<bool[]>();
             private Dictionary<ulong, int> distanceDictionary = new Dictionary<ulong, int>();
             private int distanceCount = 0;
@@ -59,7 +62,9 @@ namespace RunMission.Evolution
             }
 
             public static object myLock = new object();
+            public static object myLock2 = new object();
 
+            public static object myLock3 = new object();
             /// <summary>
             /// Evaluate the provided IBlackBox against the random tic-tac-toe player and return its fitness score.
             /// Each network plays 10 games against the random player and two games against the expert player.
@@ -69,34 +74,53 @@ namespace RunMission.Evolution
             /// </summary>
             public FitnessInfo Evaluate(IBlackBox brain)
             {
-                bool[] structureGrid = ClientPool.RunAvailableClient(brain);
+                int evalCount;
+                lock (myLock)
+                {
+                    evalCount = (int)_evalCount + 5;
+                    _evalCount++;
+                };
+
+                string foldername = evalCount.ToString();
+                bool[] structureGrid = ClientPool.RunAvailableClientWithUserName(brain, username, foldername);
 
                 currentGenerationArchive.Add(structureGrid);
 
                 int fitness = 0;
 
-                while (currentGenerationArchive.Count < 10) {
+                while (currentGenerationArchive.Count < 2) {
                     Thread.Sleep(1000);
                 }
 
                 var noveltyDistance = getDistance(structureGrid);
-                distanceCount++;
+                lock (myLock2)
+                {
+                    distanceCount++;
+                }
                 
                 if (noveltyDistance > NOVELTY_THRESHOLD)
                 {
-                    novelBehaviourArchive.Add(structureGrid);
-                    saveNovelStructure(structureGrid, novelBehaviourArchive.FindIndex(x => x == structureGrid));
+                    lock(myLock2){
+                        novelBehaviourArchive.Add(structureGrid);
+                        newNovelBehaviourArchive.Add(structureGrid);
+                        if (newNovelBehaviourArchive.Count == 2)
+                            _stopConditionSatisfied = true;
+                    }
+                    FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
                     Console.WriteLine(noveltyDistance);
                 }
 
-                while(distanceCount != 10)
+                while(distanceCount != 2)
                 {
 
                 }
                 Thread.Sleep(500);
-                distanceCount = 0;
+                distanceCount = 0; 
                 currentGenerationArchive.Clear();
-                    // Return the fitness score
+
+                // run novelty until archive is full, then stop = true
+
+                // Return the fitness score
                 return new FitnessInfo(noveltyDistance, noveltyDistance);
             }
 
@@ -195,6 +219,17 @@ namespace RunMission.Evolution
             /// </summary>
             public void Reset()
             {
+            }
+
+            public void LoadStructures(string username)
+            {
+
+                List<bool[]> structures = FileUtility.LoadStructures(username);
+                foreach (var structure in structures)
+                {
+                    novelBehaviourArchive.Add(structure);
+                }
+                
             }
 
             //Method for getting the 20x20x20 grid of the confined area according to agent position, from the 41x41x41 grid

@@ -73,6 +73,10 @@ namespace RunMission.Evolution
             
 
             bool[] clientInfo = ClientPool.RunAvailableClientWithUserName(brain,username, foldername);
+
+            // save structure
+
+            FileUtility.SaveCurrentStructure(username, foldername, clientInfo);
                        
             // Return the fitness score
             return new FitnessInfo(0, 0);
