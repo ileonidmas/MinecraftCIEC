@@ -41,25 +41,39 @@ namespace MinecraftCIAC.Controllers
             return View(list);            
             //return View();
         }
-                
-        public ActionResult Evolve(int id = -1, int fitness = -1)
+        
+        
+        /// <summary>
+        /// Method for performing evolutions
+        /// </summary>
+        /// <param name="id">Indicates if its a new evolution or not. Id of chosen individual by CIEC</param>
+        /// <param name="fitness">Fitness given by user input for the chosen individual</param>
+        /// <param name="novelty">Indicates whether or not to perform novelty search</param>
+        public ActionResult Evolve(int id = -1, int fitness = -1, int isNovelty = 0)
         {
-            MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
+            // Get username for this evolution
             string username = "Leo";//Request.UserHostAddress;
-            MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple",username);
+
+            // Get client pool used for running the evaluations
+            MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
+
+            // Initialize the experiment and the evaluator object (MinecraftSimpleEvaluator)
+            MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
             XmlDocument xmlConfig = new XmlDocument();
             if (System.Environment.UserName == "lema")
                 xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
             else
                 xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
 
-
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
+
+            // The evolutionary algorithm object
             NeatEvolutionAlgorithm<NeatGenome> algorithm;
 
-            if (id != -1)
+            //Perform CIEC evolution
+            if (id != -1 && isNovelty == 0)
             {            
-                // read current poppulation
+                // read current population and set fitness of the chosen genome
                 var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
                 var list = experiment.LoadPopulation(reader);
                 foreach (var genome in list)
@@ -69,16 +83,11 @@ namespace MinecraftCIAC.Controllers
                 list[id].EvaluationInfo.SetFitness(fitness);
                 reader.Close();
 
-                ////copy files to 0 folder and if 0 do nothing
-                //if (id != 0)
-                //{
-                //    string folderName = id.ToString();
-                //    FileUtility.CopyCanditateToParentFolder(username, folderName);
-                //}
-
-
+                // Initialize algorithm object using the current generation
                 algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory,list);
 
+                // Copy video files of the generation champion into the parent folder and delete the other 
+                // folders to allow for new candidate videos
                 int indexOfChamp = 0;
                 foreach (var genome in list)
                 {
@@ -88,32 +97,42 @@ namespace MinecraftCIAC.Controllers
                     }
                     indexOfChamp++;
                 }
-
-                algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory,list);                
+                
+                // Perform evaluation of a generation. Pause shortly after to ensure that the algorithm only
+                // evaluates one generation
                 algorithm.StartContinue();
                 Thread.Sleep(1000);
                 algorithm.RequestPause();
+
+                // Wait for the evaluation of the generation to be done
                 while (algorithm.RunState != RunState.Paused)
                 {
                     Thread.Sleep(100);
                 }
-            } else
+            } else if (id != -1 && isNovelty == 1)  // Perform Novelty Search
             {
 
-                RunMission.Evolution.FileUtility.CreateUserFolder(username);
+            } else  // Start new evolution
+            {
+                // Create folders for the user
+                FileUtility.CreateUserFolder(username);
+
+                // Create a new evolution algorithm object with an initial generation
                 algorithm = experiment.CreateEvolutionAlgorithm();
             }
 
 
             // do loading screen here
 
-
+            // Save population after evaluating the generation
             var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
             doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
+
+
             TempData["msg"] = "<script>alert('Happy thoughts');</script>";
+
+            // Prepares next evolution view
             List<Evolution> evolutions = new List<Evolution>();
-
-
 
             for(int i = 0;i< algorithm.GenomeList.Count; i++)
             {
@@ -165,20 +184,25 @@ namespace MinecraftCIAC.Controllers
         }
         */
 
-
+        /// <summary>
+        /// Method to continue on another users saved progress of their evolution
+        /// </summary>
+        /// <param name="filesLocation">Path to the files of the evolution a user wants to branch from</param>
         public ActionResult Continue(string filesLocation)
         {
-            //get username
+            // get username
             string username = "Leo";
 
-            //create clean user folder in results
-            RunMission.Evolution.FileUtility.CreateUserFolder(username);
+            // create clean user folder in Results
+            FileUtility.CreateUserFolder(username);
 
             // move files to username folder in Results
             FileUtility.CopyFilesToUserFolder(filesLocation, username);
-            
-            //recreate experiment to load poppulation
+
+            // Get client pool used for running the evaluations
             MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
+
+            //recreate experiment and load poppulation
             MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
             XmlDocument xmlConfig = new XmlDocument();
             if (System.Environment.UserName == "lema")
@@ -187,7 +211,7 @@ namespace MinecraftCIAC.Controllers
                 xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
-            // read current poppulation
+            // read current population
             var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
             var list = experiment.LoadPopulation(reader);
             reader.Close();
@@ -199,6 +223,8 @@ namespace MinecraftCIAC.Controllers
                 string folderName = i.ToString();
                 string videoPath = "";
                 videoPath = FileUtility.GetVideoPathWithoutDecoding(username, i.ToString());
+                
+                //TODO: Change branch ID to 0
                 Evolution evolution = new Evolution() { ID = i , DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
                 evolutions.Add(evolution);
             }
@@ -212,24 +238,25 @@ namespace MinecraftCIAC.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Method for publishing an evolution
+        /// </summary>
         public ActionResult Publish()
         {
-
             // save to candidate path
             string evolutionPath = FileUtility.SaveCurrentProgressAndReturnPath("Leo");
             string videoPath = FileUtility.GetVideoPathFromEvolutionPath(evolutionPath);
-            // add stuff to database
 
+            // add stuff to database
             int count = db.Evolutions.Count() + 1;
+
+            //TODO: Change BranchID to ID of the chosen evolution, if this is a continution of another users progress
             db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = evolutionPath, ParentVideoPath = videoPath});
 
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-       
-
-       
         protected override void Dispose(bool disposing)
         {
             if (disposing)
