@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MinecraftCIAC.Models.Evolution>
+@{
+    ViewBag.Title = "First Evolution";
+}
+
+
+
+@Html.Raw(TempData["msg"])
+
+<div>
+    @Html.ActionLink("Publish", "Publish") |
+    @Html.ActionLink("Return to main page", "Return")
+</div>
+
+@*Poppulation list*@
+
+
+<h3>Candidates</h3>
+<table class="table-striped">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                <video width="320" height="240" src="~/Results/Users/@item.DirectoryPath" controls autoplay />
+            </td>
+            <td>
+                |    @Html.ActionLink("Evolve small", "Evolve", new { id = item.ID, fitness = 2 })
+            </td>
+            <td>
+                |    @Html.ActionLink("Evolve big", "Evolve", new { id = item.ID, fitness = 10 })
+            </td>
+            <td>
+                |    @Html.ActionLink("Perform novelty search", "Evolve", new { id = item.ID, fitness = -1 })
+            </td>
+        </tr>
+    }
+
+
+

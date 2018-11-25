@@ -230,6 +230,7 @@
     <Content Include="Views\Movies\Index.cshtml" />
     <Content Include="Views\Evolution\Index.cshtml" />
     <Content Include="Views\Evolution\Evolve.cshtml" />
+    <Content Include="Views\Evolution\FirstEvolution.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

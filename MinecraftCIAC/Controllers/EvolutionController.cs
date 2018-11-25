@@ -138,7 +138,7 @@ namespace MinecraftCIAC.Controllers
                     // folders to allow for new candidate videos
                     int indexOfChamp = 0;
                     foreach (var genome in list)
-                    {
+                    {                        
                         if (genome.Id == algorithm.CurrentChampGenome.Id && algorithm.CurrentChampGenome.Id != 0)
                         {
                             FileUtility.CopyCanditateToParentFolder(username, indexOfChamp.ToString());
@@ -149,7 +149,7 @@ namespace MinecraftCIAC.Controllers
                     // Perform evaluation of a generation. Pause shortly after to ensure that the algorithm only
                     // evaluates one generation
                     algorithm.StartContinue();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
                     algorithm.RequestPause();
 
                     // Wait for the evaluation of the generation to be done
@@ -194,46 +194,20 @@ namespace MinecraftCIAC.Controllers
                     videoPath = FileUtility.GetVideoPathWithoutDecoding(username, "0");
                 }
                 else
-                {
+                {                    
                     videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
                 }
                 Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username,folderName), BranchID = i };
                 evolutions.Add(evolution);
             }
-            
+            if(id == -1)
+            {
+                return View("FirstEvolution", evolutions);
+            }
             return View(evolutions);
         }
 
-        /*
-        public static string getIPAddress(HttpRequestBase request)
-        {
-            string szRemoteAddr = request.UserHostAddress;
-            string szXForwardedFor = request.ServerVariables["X_FORWARDED_FOR"];
-            string szIP = "";
-
-            if (szXForwardedFor == null)
-            {
-                szIP = szRemoteAddr;
-            }
-            else
-            {
-                szIP = szXForwardedFor;
-                if (szIP.IndexOf(",") > 0)
-                {
-                    string[] arIPs = szIP.Split(',');
-
-                    foreach (string item in arIPs)
-                    {
-                        
-                            if (item!= null)
-                            return item;
-                        
-                    }
-                }
-            }
-            return szIP;
-        }
-        */
+       
 
         /// <summary>
         /// Method to continue on another users saved progress of their evolution
@@ -307,6 +281,54 @@ namespace MinecraftCIAC.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Evolution evo = db.Evolutions.Find(id);
+            if (evo == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.Evolutions.Remove(evo);
+            db.SaveChanges();
+            FileUtility.DeleteDirectory(evo.DirectoryPath);
+            return RedirectToAction("Index");
+        }
+
+        /*
+       public static string getIPAddress(HttpRequestBase request)
+       {
+           string szRemoteAddr = request.UserHostAddress;
+           string szXForwardedFor = request.ServerVariables["X_FORWARDED_FOR"];
+           string szIP = "";
+
+           if (szXForwardedFor == null)
+           {
+               szIP = szRemoteAddr;
+           }
+           else
+           {
+               szIP = szXForwardedFor;
+               if (szIP.IndexOf(",") > 0)
+               {
+                   string[] arIPs = szIP.Split(',');
+
+                   foreach (string item in arIPs)
+                   {
+
+                           if (item!= null)
+                           return item;
+
+                   }
+               }
+           }
+           return szIP;
+       }
+       */
 
         protected override void Dispose(bool disposing)
         {

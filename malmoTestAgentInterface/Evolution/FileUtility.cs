@@ -23,7 +23,7 @@ namespace RunMission.Evolution
 
             if (Directory.Exists(fullPath))
             {
-                Directory.Delete(fullPath, true);
+                DeleteDirectory(fullPath);
             }
 
             Directory.CreateDirectory(fullPath);
@@ -44,6 +44,8 @@ namespace RunMission.Evolution
         {
             string fullPath = resultsPath + "/" + username + "/" + foldername + "/";
             string destinationFolder = resultsPath + "/" + username + "/" + foldername + "/" + "data";
+            if (!File.Exists(fullPath + "data.tgz"))
+                return GetVideoPathWithoutDecoding(username, foldername);
 
             var inStream = new FileStream(fullPath + "data.tgz", FileMode.Open);
             Stream gzipStream = new GZipInputStream(inStream);
@@ -117,7 +119,7 @@ namespace RunMission.Evolution
         {
             string fullPath = resultsPath + "/" + username + "/" + foldername;
             if(Directory.Exists(fullPath))
-                Directory.Delete(fullPath, true);
+                DeleteDirectory(fullPath);
         }
 
         public static void CopyCanditateToParentFolder(string username, string foldername)
@@ -126,7 +128,7 @@ namespace RunMission.Evolution
                 return;
             string fullPath = resultsPath + "/" + username + "/" + foldername;
             string oldPath = resultsPath + "/" + username + "/0" ;
-            Directory.Delete(oldPath, true);
+            DeleteDirectory(oldPath);
             Directory.Move(fullPath, oldPath);
         }
 
@@ -135,7 +137,7 @@ namespace RunMission.Evolution
             string source = resultsPath + "/" + username + "/" + currentfoldername;
             string dest = resultsPath + "/" + username + "/" + newfoldername;
             if(Directory.Exists(dest))
-                Directory.Delete(dest, true);
+                DeleteDirectory(dest);
             Directory.Move(source, dest);
         }
 
@@ -143,7 +145,7 @@ namespace RunMission.Evolution
         {
             string userPath = resultsPath + "/" + username;
             if (Directory.Exists(userPath))
-                Directory.Delete(userPath, true);
+                DeleteDirectory(userPath);
             Directory.CreateDirectory(userPath);
         }
 
@@ -229,6 +231,28 @@ namespace RunMission.Evolution
             }
             return structures;
 
+        }
+
+
+
+
+        public static void DeleteDirectory(string target_dir)
+        {
+            string[] files = Directory.GetFiles(target_dir);
+            string[] dirs = Directory.GetDirectories(target_dir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(target_dir, false);
         }
     }
 }
