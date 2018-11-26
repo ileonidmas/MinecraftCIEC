@@ -1,5 +1,6 @@
 ﻿using RunMission.Evolution.RunMission.Evolution;
 using SharpNeat.Core;
+using SharpNeat.Genomes.Neat;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace RunMission.Evolution
         /// <summary>
         /// Gets the MinecraftBuilder evaluator that scores individuals.
         /// </summary>
-        public override IPhenomeEvaluator<IBlackBox> PhenomeEvaluator
+        public override IPhenomeEvaluator<IBlackBox, NeatGenome> PhenomeEvaluator
         {
             get {
 
@@ -47,7 +48,7 @@ namespace RunMission.Evolution
                     return evaluator;
                 }
 
-                return new MinecraftFitnessEvaluator();
+                return new MinecraftSimpleEvaluator();
             }
         }
         /// <summary>

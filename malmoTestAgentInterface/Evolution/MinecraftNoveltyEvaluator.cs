@@ -7,6 +7,7 @@ namespace RunMission.Evolution
 {
     using Newtonsoft.Json.Linq;
     using SharpNeat.Core;
+    using SharpNeat.Genomes.Neat;
     using SharpNeat.Phenomes;
     using System;
     using System.Collections.Generic;
@@ -19,11 +20,11 @@ namespace RunMission.Evolution
     #region IPhenomeEvaluator<IBlackBox> Members
 .Evolution
     {
-        public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox>
+        public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox, NeatGenome>
         {
             private readonly int NOVELTY_THRESHOLD = 1;
-            private readonly int NOVELTY_KNEARSEST = 2;
-            private readonly int POPULATION_SIZE = 2;
+            private readonly int NOVELTY_KNEARSEST = 5;
+            private readonly int POPULATION_SIZE = 5;
             private ulong _evalCount;
             private bool _stopConditionSatisfied;
             private MalmoClientPool clientPool;
@@ -64,7 +65,6 @@ namespace RunMission.Evolution
 
             public static object myLock = new object();
             public static object myLock2 = new object();
-
             public static object myLock3 = new object();
             /// <summary>
             /// Evaluate the provided IBlackBox against the random tic-tac-toe player and return its fitness score.
@@ -73,7 +73,7 @@ namespace RunMission.Evolution
             /// 
             /// A win is worth 10 points, a draw is worth 1 point, and a loss is worth 0 points.
             /// </summary>
-            public FitnessInfo Evaluate(IBlackBox brain)
+            public FitnessInfo Evaluate(IBlackBox brain, NeatGenome genome)
             {
                 int evalCount;
                 lock (myLock)
@@ -86,8 +86,6 @@ namespace RunMission.Evolution
                 bool[] structureGrid = ClientPool.RunAvailableClientWithUserName(brain, username, foldername);
 
                 currentGenerationArchive.Add(structureGrid);
-
-                int fitness = 0;
 
                 while (currentGenerationArchive.Count < POPULATION_SIZE) {
                     Thread.Sleep(1000);
@@ -107,10 +105,11 @@ namespace RunMission.Evolution
                         newNovelBehaviourArchive.Add(structureGrid);
                         if (newNovelBehaviourArchive.Count == POPULATION_SIZE)
                             _stopConditionSatisfied = true;
+
+                        FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
+                        FileUtility.CopyCanditateToProperFolder(username, foldername, counter.ToString());
+                        Console.WriteLine(noveltyDistance);
                     }
-                    FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
-                    FileUtility.CopyCanditateToProperFolder(username,foldername,counter.ToString());
-                    Console.WriteLine(noveltyDistance);
                 }
 
                 while(distanceCount != POPULATION_SIZE)

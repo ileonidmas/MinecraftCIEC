@@ -39,7 +39,7 @@ namespace RunMission.Evolution
         ParallelOptions _parallelOptions;
 
         #region Abstract properties that subclasses must implement
-        public abstract IPhenomeEvaluator<IBlackBox> PhenomeEvaluator { get; }
+        public abstract IPhenomeEvaluator<IBlackBox, NeatGenome> PhenomeEvaluator { get; }
         public abstract int InputCount { get; }
         public abstract int OutputCount { get; }
         public abstract bool EvaluateParents { get; }

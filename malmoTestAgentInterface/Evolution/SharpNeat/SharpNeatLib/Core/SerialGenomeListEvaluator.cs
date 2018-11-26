@@ -9,6 +9,7 @@
  * You should have received a copy of the MIT License
  * along with SharpNEAT; if not, see https://opensource.org/licenses/MIT.
  */
+using SharpNeat.Genomes.Neat;
 using System.Collections.Generic;
 
 namespace SharpNeat.Core
@@ -30,7 +31,7 @@ namespace SharpNeat.Core
     {
         readonly EvaluationMethod _evaluationMethod;
         readonly IGenomeDecoder<TGenome,TPhenome> _genomeDecoder;
-        readonly IPhenomeEvaluator<TPhenome> _phenomeEvaluator;
+        readonly IPhenomeEvaluator<TPhenome, TGenome> _phenomeEvaluator;
         readonly bool _enablePhenomeCaching;
 
         delegate void EvaluationMethod(IList<TGenome> genomeList);
@@ -42,7 +43,7 @@ namespace SharpNeat.Core
         /// Phenome caching is enabled by default.
         /// </summary>
         public SerialGenomeListEvaluator(IGenomeDecoder<TGenome,TPhenome> genomeDecoder,
-                                         IPhenomeEvaluator<TPhenome> phenomeEvaluator)
+                                         IPhenomeEvaluator<TPhenome, TGenome> phenomeEvaluator)
         {
             _genomeDecoder = genomeDecoder;
             _phenomeEvaluator = phenomeEvaluator;
@@ -54,7 +55,7 @@ namespace SharpNeat.Core
         /// Construct with the provided IGenomeDecoder, IPhenomeEvaluator and enablePhenomeCaching flag.
         /// </summary>
         public SerialGenomeListEvaluator(IGenomeDecoder<TGenome,TPhenome> genomeDecoder,
-                                         IPhenomeEvaluator<TPhenome> phenomeEvaluator,
+                                         IPhenomeEvaluator<TPhenome, TGenome> phenomeEvaluator,
                                          bool enablePhenomeCaching)
         {
             _genomeDecoder = genomeDecoder;
@@ -124,7 +125,7 @@ namespace SharpNeat.Core
                 }
                 else
                 {   
-                    FitnessInfo fitnessInfo = _phenomeEvaluator.Evaluate(phenome);
+                    FitnessInfo fitnessInfo = _phenomeEvaluator.Evaluate(phenome, genome);
                     genome.EvaluationInfo.SetFitness(fitnessInfo._fitness);
                     genome.EvaluationInfo.AuxFitnessArr = fitnessInfo._auxFitnessArr;
                 }
@@ -150,7 +151,7 @@ namespace SharpNeat.Core
                 }
                 else
                 {   
-                    FitnessInfo fitnessInfo = _phenomeEvaluator.Evaluate(phenome);
+                    FitnessInfo fitnessInfo = _phenomeEvaluator.Evaluate(phenome, genome);
                     genome.EvaluationInfo.SetFitness(fitnessInfo._fitness);
                     genome.EvaluationInfo.AuxFitnessArr = fitnessInfo._auxFitnessArr;
                 }

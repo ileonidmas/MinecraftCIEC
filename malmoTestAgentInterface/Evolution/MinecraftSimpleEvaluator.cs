@@ -1,4 +1,5 @@
 ﻿using SharpNeat.Core;
+using SharpNeat.Genomes.Neat;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace RunMission.Evolution
 {
-    class MinecraftSimpleEvaluator : IPhenomeEvaluator<IBlackBox>
+    class MinecraftSimpleEvaluator : IPhenomeEvaluator<IBlackBox, NeatGenome>
     {
         private ulong _evalCount;
         private bool _stopConditionSatisfied;
@@ -51,7 +52,7 @@ namespace RunMission.Evolution
         /// 
         /// A win is worth 10 points, a draw is worth 1 point, and a loss is worth 0 points.
         /// </summary>
-        public FitnessInfo Evaluate(IBlackBox brain)
+        public FitnessInfo Evaluate(IBlackBox brain, NeatGenome genome)
         {
             int evalCount;
             lock (myLock) {
@@ -72,7 +73,7 @@ namespace RunMission.Evolution
 
             
 
-            bool[] clientInfo = ClientPool.RunAvailableClientWithUserName(brain,username, foldername);
+            bool[] clientInfo = ClientPool.RunAvailableClientWithUserName(brain, username, foldername);
 
             // save structure
 

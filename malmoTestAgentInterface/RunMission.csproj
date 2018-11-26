@@ -98,7 +98,6 @@
     <Compile Include="Evolution\FileUtility.cs" />
     <Compile Include="Evolution\MalmoClient.cs" />
     <Compile Include="Evolution\MalmoClientPool.cs" />
-    <Compile Include="Evolution\MinecraftFitnessEvaluator.cs" />
     <Compile Include="Evolution\MinecraftBuilderExperiment.cs" />
     <Compile Include="Evolution\Abstract\SimpleNeatExperiment.cs" />
     <Compile Include="Evolution\MinecraftNoveltyEvaluator.cs" />

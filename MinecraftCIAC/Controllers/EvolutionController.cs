@@ -82,13 +82,11 @@ namespace MinecraftCIAC.Controllers
             {
                 if (fitness < 0)
                 {
-                    //do novelty
+                    //Transition CIEC -> Novelty
 
                     //load population
                     var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
-                    
                     var list = experiment.LoadPopulation(reader);
-
                     foreach (var genome in list)
                     {
                         genome.EvaluationInfo.SetFitness(0);
@@ -116,7 +114,7 @@ namespace MinecraftCIAC.Controllers
                 }
                 else
                 {
-                    // do simple ciec
+                    //Transition CIEC -> CIEC
 
                     // read current population and set fitness of the chosen genome
                     var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
@@ -161,9 +159,7 @@ namespace MinecraftCIAC.Controllers
                 }
             } else
             {
-                // start simple ciec
-
-
+                // Perform new evolution
 
                 // Create folders for the user
                 FileUtility.CreateUserFolder(username);
