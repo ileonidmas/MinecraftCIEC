@@ -105,6 +105,10 @@ namespace RunMission.Evolution
         public static bool IsFirstIteration(string username, string foldername)
         {
             string fullPath = resultsPath + "/" + username;
+            if (!Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);                
+            }
             var directories = Directory.GetDirectories(fullPath);
             foreach (var folder in directories)
             {

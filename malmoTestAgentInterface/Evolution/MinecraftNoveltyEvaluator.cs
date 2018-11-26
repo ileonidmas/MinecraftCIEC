@@ -22,7 +22,7 @@ namespace RunMission.Evolution
     {
         public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox, NeatGenome>
         {
-            private readonly int NOVELTY_THRESHOLD = 1;
+            private readonly int NOVELTY_THRESHOLD = -1;
             private readonly int NOVELTY_KNEARSEST = 5;
             private readonly int POPULATION_SIZE = 5;
             private ulong _evalCount;
@@ -88,7 +88,7 @@ namespace RunMission.Evolution
                 currentGenerationArchive.Add(structureGrid);
 
                 // Wait until all in the current generation has been evaluated
-                while (currentGenerationArchive.Count < POPULATION_SIZE - 1) {
+                while (currentGenerationArchive.Count < POPULATION_SIZE - 1 ) {
                     Thread.Sleep(1000);
                 }
 
@@ -116,7 +116,7 @@ namespace RunMission.Evolution
                     distanceCount++;
                 }
 
-                while(distanceCount != POPULATION_SIZE - 1)
+                while(distanceCount != POPULATION_SIZE - 1 )
                 {
 
                 }

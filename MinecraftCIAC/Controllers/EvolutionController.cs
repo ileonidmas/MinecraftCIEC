@@ -17,6 +17,7 @@ using System.Web.Mvc;
 using System.IO;
 using System.Xml;
 using RunMission.Evolution.RunMission.Evolution;
+using MinecraftCIAC.Global;
 
 namespace MinecraftCIAC.Controllers
 {
@@ -55,6 +56,9 @@ namespace MinecraftCIAC.Controllers
             // Get username for this evolution
             string username = "Leo";//Request.UserHostAddress;
 
+            // Prepares next evolution view
+            List<Evolution> evolutions = new List<Evolution>();
+
             // Get client pool used for running the evaluations
             MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
 
@@ -84,14 +88,15 @@ namespace MinecraftCIAC.Controllers
                 {
                     //Transition CIEC -> Novelty
 
-                    //load population
+                    //load population, choose selected as parent and create offsprings
                     var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
                     var list = experiment.LoadPopulation(reader);
-                    foreach (var genome in list)
-                    {
-                        genome.EvaluationInfo.SetFitness(0);
-                    }
-                    list[id].EvaluationInfo.SetFitness(10);
+                    var parent = list[id];
+                    List<NeatGenome> offSprings = new List<NeatGenome>();
+                    offSprings.Add(parent);
+                    while (offSprings.Count != GloabalVariables.POPULATION_SIZE)
+                        offSprings.Add(parent.CreateOffspring(parent.BirthGeneration));
+
                     reader.Close();
 
                     // add novel structure to archive
@@ -100,17 +105,52 @@ namespace MinecraftCIAC.Controllers
                     //save chosen to parent
                     FileUtility.CopyCanditateToParentFolder(username, id.ToString());
 
+                    offSprings[0].EvaluationInfo.SetFitness(10);
                     // Initialize algorithm object using the current generation
-                    algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory, list);
-
+                    algorithm = experiment.CreateEvolutionAlgorithm(offSprings[1].GenomeFactory, offSprings);
+                    
                     // Copy video files of the generation champion into the parent folder and delete the other 
                     // folders to allow for new candidate videos
 
                     algorithm.StartContinue();
+
+                    Thread.Sleep(5000);
+                    algorithm.RequestPause();
+
                     while (algorithm.RunState != RunState.Paused)
                     {
                         Thread.Sleep(100);
                     }
+
+
+                    // save separate genomes to population.xml
+                    var tempList = new List<NeatGenome>();
+                    for (int i = 0; i < algorithm.GenomeList.Count; i++)
+                    {
+                        reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + i.ToString()+ "/" +"genome.xml");
+                        list = experiment.LoadPopulation(reader);
+                        tempList.Add(list[0]);
+                        reader.Close();
+                    }
+
+                    var doc = NeatGenomeXmlIO.SaveComplete(tempList, false);
+                    doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
+
+                    // Save population after evaluating the generation
+
+                    for (int i = 0; i < algorithm.GenomeList.Count; i++)
+                    {
+                        string folderName = i.ToString();
+                        string videoPath = "";
+                        if (i == 0)
+                            videoPath = FileUtility.GetVideoPathWithoutDecoding(username, folderName);
+                        else
+                            videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
+                        Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                        evolutions.Add(evolution);
+                    }
+
+
                 }
                 else
                 {
@@ -155,7 +195,24 @@ namespace MinecraftCIAC.Controllers
                     {
                         Thread.Sleep(100);
                     }
-                    
+
+                    // Save population after evaluating the generation
+                    var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
+                    doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
+
+                    for (int i = 0; i < algorithm.GenomeList.Count; i++)
+                    {
+                        string folderName = i.ToString();
+                        string videoPath = "";
+                        if(i == 0)
+                            videoPath = FileUtility.GetVideoPathWithoutDecoding(username, folderName);
+                        else
+                            videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
+                        Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                        evolutions.Add(evolution);
+                        FileUtility.SaveCurrentGenome(username, i.ToString(), algorithm.GenomeList[i]);
+                    }
+
                 }
             } else
             {
@@ -166,40 +223,35 @@ namespace MinecraftCIAC.Controllers
 
                 // Create a new evolution algorithm object with an initial generation
                 algorithm = experiment.CreateEvolutionAlgorithm();
+
+                // Save population after evaluating the generation
+                var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
+                doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
+
+                for (int i = 0; i < algorithm.GenomeList.Count; i++)
+                {
+                    string folderName = i.ToString();
+                    string videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);                    
+                    Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                    evolutions.Add(evolution);
+                    FileUtility.SaveCurrentGenome(username, i.ToString(), algorithm.GenomeList[i]);
+                }
+
+
+                return View("FirstEvolution", evolutions);
             }
 
 
             // do loading screen here
 
-            // Save population after evaluating the generation
-            var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
-            doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
+            
 
 
             TempData["msg"] = "<script>alert('Happy thoughts');</script>";
 
-            // Prepares next evolution view
-            List<Evolution> evolutions = new List<Evolution>();
+           
 
-            for(int i = 0;i< algorithm.GenomeList.Count; i++)
-            {
-                string folderName = i.ToString();
-                string videoPath = "";
-                if (id != -1 && i == 0)
-                {
-                    videoPath = FileUtility.GetVideoPathWithoutDecoding(username, "0");
-                }
-                else
-                {                    
-                    videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
-                }
-                Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username,folderName), BranchID = i };
-                evolutions.Add(evolution);
-            }
-            if(id == -1)
-            {
-                return View("FirstEvolution", evolutions);
-            }
+            
             return View(evolutions);
         }
 
