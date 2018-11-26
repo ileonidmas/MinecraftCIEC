@@ -65,7 +65,6 @@ namespace RunMission.Evolution
 
             public static object myLock = new object();
             public static object myLock2 = new object();
-            public static object myLock3 = new object();
             /// <summary>
             /// Evaluate the provided IBlackBox against the random tic-tac-toe player and return its fitness score.
             /// Each network plays 10 games against the random player and two games against the expert player.
@@ -76,30 +75,32 @@ namespace RunMission.Evolution
             public FitnessInfo Evaluate(IBlackBox brain, NeatGenome genome)
             {
                 int evalCount;
+                string foldername;
                 lock (myLock)
                 {
                     evalCount = (int)_evalCount + 100;
+                    foldername = evalCount.ToString();
                     _evalCount++;
                 };
 
-                string foldername = evalCount.ToString();
+                // Evaluate and get structure. Add to current generation archive afterwards
                 bool[] structureGrid = ClientPool.RunAvailableClientWithUserName(brain, username, foldername);
-
                 currentGenerationArchive.Add(structureGrid);
 
-                while (currentGenerationArchive.Count < POPULATION_SIZE) {
+                // Wait until all in the current generation has been evaluated
+                while (currentGenerationArchive.Count < POPULATION_SIZE - 1) {
                     Thread.Sleep(1000);
                 }
 
-                var noveltyDistance = getDistance(structureGrid);
+                // Get distance to K nearest neighbours. Lock ensures that two of the same structure
+                // doesn't get added to the novel behaviour archive, due to race condition
+                var noveltyDistance = 0.0;
                 lock (myLock2)
                 {
-                    distanceCount++;
-                }
-                
-                if (noveltyDistance > NOVELTY_THRESHOLD)
-                {
-                    lock(myLock2){
+                    noveltyDistance = getDistance(structureGrid);
+
+                    if (noveltyDistance > NOVELTY_THRESHOLD)
+                    {
                         counter++;
                         novelBehaviourArchive.Add(structureGrid);
                         newNovelBehaviourArchive.Add(structureGrid);
@@ -110,13 +111,16 @@ namespace RunMission.Evolution
                         FileUtility.CopyCanditateToProperFolder(username, foldername, counter.ToString());
                         Console.WriteLine(noveltyDistance);
                     }
+
+                    distanceCount++;
                 }
 
-                while(distanceCount != POPULATION_SIZE)
+                while(distanceCount != POPULATION_SIZE - 1)
                 {
 
                 }
-                Thread.Sleep(500);
+
+                Thread.Sleep(1000);
                 distanceCount = 0; 
                 currentGenerationArchive.Clear();
 
