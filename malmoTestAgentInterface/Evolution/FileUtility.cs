@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
+using SharpNeat.Genomes.Neat;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,7 @@ namespace RunMission.Evolution
 
         public static string CreateOutputDirectory(string username, string foldername)
         {
-            string fullPath = resultsPath + "/" +  username + "/" + foldername + "/";
+            string fullPath = resultsPath + "/" + username + "/" + foldername + "/";
 
             if (Directory.Exists(fullPath))
             {
@@ -27,7 +28,6 @@ namespace RunMission.Evolution
             }
 
             Directory.CreateDirectory(fullPath);
-
             return fullPath;
         }
 
@@ -146,7 +146,11 @@ namespace RunMission.Evolution
             string userPath = resultsPath + "/" + username;
             if (Directory.Exists(userPath))
                 DeleteDirectory(userPath);
-            Directory.CreateDirectory(userPath);
+
+            while (!Directory.Exists(userPath))
+            {
+                Directory.CreateDirectory(userPath);
+            }
         }
 
         public static string SaveCurrentProgressAndReturnPath(string username)
@@ -195,6 +199,15 @@ namespace RunMission.Evolution
                 }
                 sw.WriteLine();
             }
+        }
+
+        public static void SaveCurrentGenome(string username, string foldername, NeatGenome genome)
+        {
+            List<NeatGenome> list = new List<NeatGenome>();
+            list.Add(genome);
+            string path = resultsPath + "/" + username + "/" + foldername + "/genome.xml";
+            var doc = NeatGenomeXmlIO.SaveComplete(list, false);
+            doc.Save(path);
         }
 
         public static void SaveNovelStructure(string username, string foldername)

@@ -107,6 +107,7 @@ namespace RunMission.Evolution
                         if (newNovelBehaviourArchive.Count == POPULATION_SIZE)
                             _stopConditionSatisfied = true;
 
+                        FileUtility.SaveCurrentGenome(username, foldername, genome);
                         FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
                         FileUtility.CopyCanditateToProperFolder(username, foldername, counter.ToString());
                         Console.WriteLine(noveltyDistance);
