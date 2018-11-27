@@ -104,16 +104,15 @@ namespace MinecraftCIAC.Controllers
 
                     //save chosen to parent
                     FileUtility.CopyCanditateToParentFolder(username, id.ToString());
-
-                    offSprings[0].EvaluationInfo.SetFitness(10);
-                    // Initialize algorithm object using the current generation
-                    algorithm = experiment.CreateEvolutionAlgorithm(offSprings[1].GenomeFactory, offSprings);
                     
-                    // Copy video files of the generation champion into the parent folder and delete the other 
-                    // folders to allow for new candidate videos
+                    // Initialize algorithm object using the current generation
+                    algorithm = experiment.CreateEvolutionAlgorithm(offSprings[0].GenomeFactory, offSprings);
 
-                    algorithm.StartContinue();
-
+                    // Continue evolution after first generation if stop condition hasnt been met
+                    if (!algorithm.StopConditionSatisfied)
+                    {
+                        algorithm.StartContinue();
+                    }
 
                     while (algorithm.RunState != RunState.Paused)
                     {
@@ -234,7 +233,6 @@ namespace MinecraftCIAC.Controllers
                     evolutions.Add(evolution);
                     FileUtility.SaveCurrentGenome(username, i.ToString(), algorithm.GenomeList[i]);
                 }
-
 
                 return View("FirstEvolution", evolutions);
             }
