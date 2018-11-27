@@ -169,7 +169,7 @@ namespace SharpNeat.Genomes.Neat
 
             // Write genomes.
             foreach(NeatGenome genome in genomeList) {
-                Debug.Assert(genome.ActivationFnLibrary == activationFnLib);
+                //Debug.Assert(genome.ActivationFnLibrary == activationFnLib);
                 Write(xw, genome, nodeFnIds);
             }
 
