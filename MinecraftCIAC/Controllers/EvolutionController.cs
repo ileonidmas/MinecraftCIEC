@@ -114,8 +114,6 @@ namespace MinecraftCIAC.Controllers
 
                     algorithm.StartContinue();
 
-                    Thread.Sleep(5000);
-                    algorithm.RequestPause();
 
                     while (algorithm.RunState != RunState.Paused)
                     {
