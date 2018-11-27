@@ -97,22 +97,28 @@ namespace RunMission.Evolution
                 var noveltyDistance = 0.0;
                 lock (myLock2)
                 {
-                    noveltyDistance = getDistance(structureGrid);
 
-                    if (noveltyDistance > NOVELTY_THRESHOLD)
+                    if (counter < POPULATION_SIZE)
                     {
-                        counter++;
-                        novelBehaviourArchive.Add(structureGrid);
-                        newNovelBehaviourArchive.Add(structureGrid);
-                        if (newNovelBehaviourArchive.Count == POPULATION_SIZE)
-                            _stopConditionSatisfied = true;
+                        noveltyDistance = getDistance(structureGrid);
 
-                        FileUtility.SaveCurrentGenome(username, foldername, genome);
-                        FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
-                        FileUtility.CopyCanditateToProperFolder(username, foldername, counter.ToString());
-                        Console.WriteLine(noveltyDistance);
+                        if (noveltyDistance > NOVELTY_THRESHOLD)
+                        {
+                            counter++;
+                            novelBehaviourArchive.Add(structureGrid);
+                            newNovelBehaviourArchive.Add(structureGrid);
+                            if (newNovelBehaviourArchive.Count == POPULATION_SIZE)
+                                _stopConditionSatisfied = true;
+
+                            FileUtility.SaveCurrentGenome(username, foldername, genome);
+                            FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
+                            FileUtility.CopyCanditateToProperFolder(username, foldername, counter.ToString());
+                            Console.WriteLine(noveltyDistance);
+                        }
+                    } else
+                    {
+                        _stopConditionSatisfied = true;
                     }
-
                     distanceCount++;
                 }
 
