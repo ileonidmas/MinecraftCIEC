@@ -28,6 +28,7 @@ namespace RunMission.Evolution
             private ulong _evalCount;
             private bool _stopConditionSatisfied;
             private MalmoClientPool clientPool;
+            private int populationSize = 0;
             public string username { get; set; }
 
             private string noveltyArchivePath;
@@ -81,6 +82,7 @@ namespace RunMission.Evolution
                     evalCount = (int)_evalCount + 100;
                     foldername = evalCount.ToString();
                     _evalCount++;
+                    populationSize++;
                 };
 
                 // Evaluate and get structure. Add to current generation archive afterwards
@@ -88,7 +90,7 @@ namespace RunMission.Evolution
                 currentGenerationArchive.Add(structureGrid);
 
                 // Wait until all in the current generation has been evaluated
-                while (currentGenerationArchive.Count < POPULATION_SIZE - 1 ) {
+                while (currentGenerationArchive.Count < populationSize) {
                     Thread.Sleep(1000);
                 }
 
@@ -122,13 +124,14 @@ namespace RunMission.Evolution
                     distanceCount++;
                 }
 
-                while(distanceCount != POPULATION_SIZE - 1 )
+                while(distanceCount != populationSize)
                 {
 
                 }
 
                 Thread.Sleep(1000);
-                distanceCount = 0; 
+                distanceCount = 0;
+                populationSize = 0;
                 currentGenerationArchive.Clear();
 
                 // run novelty until archive is full, then stop = true

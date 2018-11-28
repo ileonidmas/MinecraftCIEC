@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
@@ -11,8 +12,10 @@ namespace MinecraftCIAC.Controllers
         // 
         // GET: /HelloWorld/ 
 
-        public ActionResult Index()
+        public ActionResult Index(string search)
         {
+            Thread.Sleep(5000);
+
             return View();
         }
 

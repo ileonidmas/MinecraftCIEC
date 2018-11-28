@@ -9,8 +9,8 @@
 
 
 <div>
-    @Html.ActionLink("Publish", "Publish") |
-    @Html.ActionLink("Return to main page", "Return")
+    @Html.ActionLink("Publish", "Publish",new { }, new { @class = "btn btn-primary", @style = "color:white" }) 
+    @Html.ActionLink("Return to main page", "Return", new { }, new { @class = "btn btn-primary", @style = "color:white" })
 </div>
 
 @*Champion*@
@@ -20,12 +20,9 @@
     <video width="320" height="240" src="~/Results/Users/@Model.ElementAt(0).DirectoryPath" controls autoplay />
 </div>
 <div>
-    @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 2 })
-    |
-    @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 10 })
-    |
-    @Html.ActionLink("Perform novelty search", "Evolve", new { id = 0, fitness = -1 })
-    |
+    @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 2 }, new { @class = "btn btn-primary", @style = "color:white" })    
+    @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 10 }, new { @class = "btn btn-primary", @style = "color:white" })    
+    @Html.ActionLink("Perform novelty search", "Evolve", new { id = 0, fitness = -1 }, new { @class = "btn btn-primary", @style = "color:white" })    
 </div>
 
 @*Poppulation list*@
@@ -50,13 +47,13 @@
                 <video width="320" height="240" src="~/Results/Users/@Model.ElementAt(i).DirectoryPath" controls autoplay />
             </td>
             <td>
-                |    @Html.ActionLink("Evolve small", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 2 })
+                    @Html.ActionLink("Evolve small", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 2 }, new { @class = "btn btn-primary", @style = "color:white" })
             </td>
             <td>
-                |    @Html.ActionLink("Evolve big", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 10 })
+                    @Html.ActionLink("Evolve big", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 10 }, new { @class = "btn btn-primary", @style = "color:white" })
             </td>
             <td>
-                |    @Html.ActionLink("Perform novelty search", "Evolve", new { id = Model.ElementAt(i).ID, fitness = -1 })
+                    @Html.ActionLink("Perform novelty search", "Evolve", new { id = Model.ElementAt(i).ID, fitness = -1 }, new { @class = "btn btn-primary", @style = "color:white" })
             </td>
         </tr>
     }

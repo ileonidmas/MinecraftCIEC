@@ -4,7 +4,7 @@
 }
 
 <div>
-    @Html.ActionLink("Start new evolution", "Evolve") 
+    @Html.ActionLink("Start new evolution", "Evolve", new { },new { @class = "btn btn-primary", @style = "color:white" }) 
 </div>
 
 <table class="table-striped">
@@ -28,11 +28,11 @@
             <video width="320" height="240" src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />
         </td>
         <td>
-            |    @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath })    
+                @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath }, new { @class = "btn btn-primary", @style = "color:white" })    
         </td>
 
         <td>
-            |    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-primary", @style = "color:white" })
         </td>
     </tr>
     }
