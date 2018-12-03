@@ -171,6 +171,7 @@ namespace RunMission.Evolution
             {
 
                 mission.requestVideo(320, 240);
+                mission.setViewpoint(1);
                 var outputDirectory = FileUtility.CreateOutputDirectory(userName, folderName);
                 MissionRecordSpec missionRecord = new MissionRecordSpec(outputDirectory + "data.tgz");
                 missionRecord.recordMP4(60, 400000);

@@ -4,8 +4,9 @@
 }
 
 <div>
-    @Html.ActionLink("Start new evolution", "Evolve", new { },new { @class = "btn btn-primary", @style = "color:white" }) 
+    @Html.ActionLink("Start new evolution", "Evolve", new { }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })
 </div>
+
 
 <table class="table-striped">
     <tr>
@@ -16,23 +17,47 @@
                 @Html.DisplayNameFor(model => model.ID)
             </th>
         }
-    </tr>    
+    </tr>
     @foreach (var item in Model)
     {
-    <tr>
+        <tr>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.ID)
-        </td>
-        <td>
-            <video width="320" height="240" src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />
-        </td>
-        <td>
-                @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath }, new { @class = "btn btn-primary", @style = "color:white" })    
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                <video width="320" height="240" src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />
+            </td>
+            <td>
+                @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })
+            </td>
 
-        <td>
+            <td>
                 @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-primary", @style = "color:white" })
-        </td>
-    </tr>
+            </td>
+        </tr>
     }
+
+
+
+@*Loading spinner*@
+
+    <div class="spinner" style="display:none">
+        <div class="center-div">
+            <div class="inner-div">
+                <div class="loader"></div>
+                <p>
+                    <strong>Running evolution...</strong> .
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#btn').click(function () {
+                $('.spinner').css('display', 'block');
+            });
+        });
+    </script>
