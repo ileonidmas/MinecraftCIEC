@@ -72,11 +72,11 @@ namespace MinecraftCIAC.Controllers
                 experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
             }
             XmlDocument xmlConfig = new XmlDocument();
-            xmlConfig.Load(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\minecraft.config.xml");
-            //if (System.Environment.UserName == "lema")
-            //    xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            //else
-            //    xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            //xmlConfig.Load(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\minecraft.config.xml");
+            if (System.Environment.UserName == "lema")
+                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            else
+                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
 
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 

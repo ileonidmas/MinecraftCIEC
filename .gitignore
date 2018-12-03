@@ -12,3 +12,6 @@ MinecraftCIAC/Results/Users
 malmoTestAgentInterface/bin/
 malmoTestAgentInterface/obj/
 malmoTestAgentInterface/.vs/
+
+#ignore db
+MinecraftCIAC\App_Data

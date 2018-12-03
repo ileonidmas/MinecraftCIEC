@@ -114,12 +114,12 @@ namespace RunMission.Evolution
 
         private void InitializeMission()
         {
-            // string xml;
-            string missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\myworld.xml");
-            //if (System.Environment.UserName == "lema")
-            //    missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
-            //else
-            //    missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
+             string missionXMLpath;
+            //string missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\myworld.xml");
+            if (System.Environment.UserName == "lema")
+                missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\lema\Documents\GitHub\malmoTestAgentInterface\myworld.xml");
+            else
+                missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\malmoTestAgentInterface\myworld.xml");
 
             mission = new MissionSpec(missionXMLpath, false);
             AddBlocks(mission);

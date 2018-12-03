@@ -17,7 +17,6 @@ namespace MinecraftCIAC.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
@@ -26,20 +25,8 @@ namespace MinecraftCIAC.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-            Thread t1 = new Thread(new ThreadStart(CatMethod));
-            t1.Start();
-            while (!mjau)
-            {
-                Thread.Sleep(100);
-            }
-
             return View();
         }
 
-        private void CatMethod()
-        {
-            Thread.Sleep(10000);
-            mjau = true;
-        }
     }
 }
