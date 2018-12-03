@@ -35,16 +35,38 @@
                 <video width="320" height="240" src="~/Results/Users/@item.DirectoryPath" controls autoplay />
             </td>
             <td>
-                    @Html.ActionLink("Evolve small", "Evolve", new { id = item.ID, fitness = 2 }, new { @class = "btn btn-primary", @style = "color:white" })
+                @Html.ActionLink("Evolve small", "Evolve", new { id = item.ID, fitness = 2 }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })
             </td>
             <td>
-                    @Html.ActionLink("Evolve big", "Evolve", new { id = item.ID, fitness = 10 }, new { @class = "btn btn-primary", @style = "color:white" })
+                @Html.ActionLink("Evolve big", "Evolve", new { id = item.ID, fitness = 10 }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })
             </td>
             <td>
-                    @Html.ActionLink("Perform novelty search", "Evolve", new { id = item.ID, fitness = -1 }, new { @class = "btn btn-primary", @style = "color:white" })
+                @Html.ActionLink("Perform novelty search", "Evolve", new { id = item.ID, fitness = -1 }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })
             </td>
         </tr>
     }
 
 
 
+
+    @*Loading spinner*@
+
+    <div class="spinner" style="display:none">
+        <div class="center-div">
+            <div class="inner-div">
+                <div class="loader"></div>
+                <p>
+                    <strong>Running evolution...</strong> .
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#btn').click(function () {
+                $('.spinner').css('display', 'block');
+            });
+        });
+    </script>
