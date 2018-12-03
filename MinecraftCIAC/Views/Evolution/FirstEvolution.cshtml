@@ -4,9 +4,6 @@
 }
 
 
-
-@Html.Raw(TempData["msg"])
-
 <div>
     @Html.ActionLink("Publish", "Publish", new { }, new { @class = "btn btn-primary", @style = "color:white" }) 
     @Html.ActionLink("Return to main page", "Return", new { }, new { @class = "btn btn-primary", @style = "color:white" })

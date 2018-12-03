@@ -3,10 +3,6 @@
     ViewBag.Title = "Evolve";
 }
 
-@Html.Raw(TempData["msg"])
-
-
-
 
 <div>
     @Html.ActionLink("Publish", "Publish",new { }, new { @class = "btn btn-primary", @style = "color:white" }) 
@@ -21,7 +17,7 @@
 </div>
 <div>
     @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 2 }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })    
-    @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 10 }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })    
+    @Html.ActionLink("Evolve big", "Evolve", new { id = 0, fitness = 10 }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })    
     @Html.ActionLink("Perform novelty search", "Evolve", new { id = 0, fitness = -1 }, new { id = "btn", @class = "btn btn-primary", @style = "color:white" })    
 </div>
 
