@@ -1,5 +1,5 @@
 ﻿using MinecraftCIAC.Models;
-using RunMission.Evolution;
+using MinecraftCIAC.Malmo;
 using SharpNeat.Core;
 using SharpNeat.EvolutionAlgorithms;
 using SharpNeat.Genomes.Neat;
@@ -16,7 +16,6 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.IO;
 using System.Xml;
-using RunMission.Evolution.RunMission.Evolution;
 using MinecraftCIAC.Global;
 
 namespace MinecraftCIAC.Controllers
@@ -24,22 +23,22 @@ namespace MinecraftCIAC.Controllers
     public class EvolutionController : Controller
     {
 
-        private EvolutionDBContext db = new EvolutionDBContext();
+        //private EvolutionDBContext db = new EvolutionDBContext();
 
         // GET: Evolution
         public ActionResult Index()
         {
            // var ip = getIPAddress(HttpContext.Request);
             
-            var list = db.Evolutions.ToList();
-            foreach (var evolution in list)
-            {
-                string result = Path.GetFileName(evolution.DirectoryPath);
-                string path = FileUtility.GetUserDBVideoPath("Leo", result);
-                evolution.ParentVideoPath = path;
-            }
+            //var list = db.Evolutions.ToList();
+            //foreach (var evolution in list)
+            //{
+            //    string result = Path.GetFileName(evolution.DirectoryPath);
+            //    string path = FileUtility.GetUserDBVideoPath("Leo", result);
+            //    evolution.ParentVideoPath = path;
+            //}
             //list.ElementAt(0).DirectoryPath = "video.mp4";
-
+            var list = new List<Evolution>();
             return View(list);            
             //return View();
         }
@@ -73,10 +72,11 @@ namespace MinecraftCIAC.Controllers
             }
             XmlDocument xmlConfig = new XmlDocument();
             //xmlConfig.Load(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\minecraft.config.xml");
-            if (System.Environment.UserName == "lema")
-                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            else
-                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            //if (System.Environment.UserName == "lema")
+            //    xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            //else
+            //    xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            xmlConfig.Load("C:\\inetpub\\wwwroot\\MyApp\\bin\\minecraft.config.xml");
 
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
@@ -275,10 +275,11 @@ namespace MinecraftCIAC.Controllers
             //recreate experiment and load poppulation
             MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
             XmlDocument xmlConfig = new XmlDocument();
-            if (System.Environment.UserName == "lema")
-                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            else
-                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            //if (System.Environment.UserName == "lema")
+            //    xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            //else
+            //    xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            xmlConfig.Load("C:\\inetpub\\wwwroot\\MyApp\\bin\\minecraft.config.xml");
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
             // read current population
@@ -318,12 +319,12 @@ namespace MinecraftCIAC.Controllers
             string videoPath = FileUtility.GetVideoPathFromEvolutionPath(evolutionPath);
 
             // add stuff to database
-            int count = db.Evolutions.Count() + 1;
+            //int count = db.Evolutions.Count() + 1;
 
-            //TODO: Change BranchID to ID of the chosen evolution, if this is a continution of another users progress
-            db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = evolutionPath, ParentVideoPath = videoPath});
+            ////TODO: Change BranchID to ID of the chosen evolution, if this is a continution of another users progress
+            //db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = evolutionPath, ParentVideoPath = videoPath});
 
-            db.SaveChanges();
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int? id)
@@ -332,15 +333,15 @@ namespace MinecraftCIAC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Evolution evo = db.Evolutions.Find(id);
-            if (evo == null)
-            {
-                return HttpNotFound();
-            }
+            //Evolution evo = db.Evolutions.Find(id);
+            //if (evo == null)
+            //{
+            //    return HttpNotFound();
+            //}
 
-            db.Evolutions.Remove(evo);
-            db.SaveChanges();
-            FileUtility.DeleteDirectory(evo.DirectoryPath);
+            //db.Evolutions.Remove(evo);
+            //db.SaveChanges();
+            //FileUtility.DeleteDirectory(evo.DirectoryPath);
             return RedirectToAction("Index");
         }
 
@@ -379,7 +380,7 @@ namespace MinecraftCIAC.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                //db.Dispose();
             }
             base.Dispose(disposing);
         }

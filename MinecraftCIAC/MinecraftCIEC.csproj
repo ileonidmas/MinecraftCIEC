@@ -51,12 +51,20 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\malmoTestAgentInterface\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MalmoNET, Version=0.36.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\malmoTestAgentInterface\MalmoNET.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Redzen">
+    <Reference Include="Redzen, Version=7.2.3.0, Culture=neutral, PublicKeyToken=182843a4be0a74f7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Redzen.7.2.3\lib\netstandard2.0\Redzen.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -166,12 +174,166 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgentHelper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\EvolutionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Malmo\Abstract\SimpleNeatExperiment.cs" />
+    <Compile Include="Malmo\AgentPosition.cs" />
+    <Compile Include="Malmo\Enums\Direction.cs" />
+    <Compile Include="Malmo\FileUtility.cs" />
+    <Compile Include="Malmo\MalmoClient.cs" />
+    <Compile Include="Malmo\MalmoClientPool.cs" />
+    <Compile Include="Malmo\MinecraftBuilderExperiment.cs" />
+    <Compile Include="Malmo\MinecraftNoveltyEvaluator.cs" />
+    <Compile Include="Malmo\MinecraftSimpleEvaluator.cs" />
+    <Compile Include="Malmo\NeatAgentController.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatDomains\BinaryElevenMultiplexer\BinaryElevenMultiplexerEvaluator.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatDomains\BinaryElevenMultiplexer\BinaryElevenMultiplexerExperiment.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatDomains\BinaryElevenMultiplexer\RbfBinaryElevenMultiplexerExperiment.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatDomains\ExperimentUtils.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatDomains\INeatExperiment.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatDomains\XmlUtils.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\AuxFitnessInfo.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\CoordinateVector.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\EvaluationInfo.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\FitnessInfo.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\GenomeFitnessComparer.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\IDistanceMetric.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\IEvolutionAlgorithm.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\IGenome.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\IGenomeDecoder.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\IGenomeFactory.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\IGenomeListEvaluator.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\IPhenomeEvaluator.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\ISpeciationStrategy.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\ParallelGenomeListEvaluator.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\RunState.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\SelectiveGenomeListEvaluator.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\SerialGenomeListEvaluator.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\Specie.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\UpdateMode.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Core\UpdateScheme.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\CyclicNetworkFactory.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\FastAcyclicNetworkFactory.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\FastCyclicNetworkFactory.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\DefaultNodeSetMappingFunction.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\HyperNeatDecoder.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\INodeSetMappingFunction.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\NodeSetMapping.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\Substrate.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\SubstrateConnection.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\SubstrateNode.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\HyperNeat\SubstrateNodeSet.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\Neat\NeatGenomeDecoder.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Decoders\NetworkActivationScheme.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\DistanceMetrics\DistanceMetricUtils.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\DistanceMetrics\EuclideanDistanceMetric.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\DistanceMetrics\ManhattanDistanceMetric.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\AbstractGenerationalAlgorithm.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\ComplexityRegulation\ComplexityCeilingType.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\ComplexityRegulation\ComplexityRegulationMode.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\ComplexityRegulation\DefaultComplexityRegulationStrategy.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\ComplexityRegulation\IComplexityRegulationStrategy.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\ComplexityRegulation\NullComplexityRegulationStrategy.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\NeatAlgorithmStats.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\NeatEvolutionAlgorithm.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\EvolutionAlgorithms\NeatEvolutionAlgorithmParameters.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\HyperNeat\CppnGenomeFactory.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\AddedNeuronGeneStruct.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionGene.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionGeneComparer.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionGeneList.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionGeneListBuilder.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionMutationInfo.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionMutationInfoList.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionPerturbanceType.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\ConnectionSelectionType.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\CorrelationItem.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\CorrelationItemType.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\CorrelationResults.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\CorrelationStatistics.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\NeatGenome.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\NeatGenomeFactory.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\NeatGenomeParameters.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\NeatGenomeStats.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\NeatGenomeXmlIO.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\NeuronGene.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\Neat\NeuronGeneList.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Genomes\RbfNeat\RbfGenomeFactory.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\ActivationFunctionInfo.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Bipolar\BipolarGaussian.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Bipolar\BipolarSigmoid.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Bipolar\Linear.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Bipolar\Sine.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\NullFn.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\RadialBasis\RbfGaussian.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\ArcSinH.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\ArcTan.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\Gaussian.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\LeakyReLU.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\LeakyReLUShifted.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\LogisticFunction.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\LogisticFunctionSteep.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\MaxMinusOne.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\PolynomialApproximantSteep.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\QuadraticSigmoid.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\ReLU.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\ScaledELU.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\SoftSignSteep.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\SReLU.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\SReLUShifted.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ActivationFunctions\Unipolar\TanH.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\AcyclicNetworkDepthAnalysis.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ConnectionEndpointsStruct.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\ConnectionList.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\CyclicNetworkDepthAnalysis.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\CyclicNetworkTest.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\DefaultActivationFunctionLibrary.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\IActivationFunction.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\IActivationFunctionLibrary.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\IConnectionList.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\INetworkConnection.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\INetworkDefinition.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\INetworkNode.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\INodeList.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NetworkConnection.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NetworkConnectivityData.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NetworkDefinition.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NetworkDepthInfo.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NetworkNode.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NetworkXmlIO.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NodeConnectivityData.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NodeList.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Network\NodeType.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\IBlackBox.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\ISignalArray.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\MappingSignalArray.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\AcyclicNetwork\FastAcyclicNetwork.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\AcyclicNetwork\LayerInfo.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\CyclicNetwork\Connection.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\CyclicNetwork\CyclicNetwork.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\CyclicNetwork\Neuron.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\CyclicNetwork\RelaxingCyclicNetwork.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\FastCyclicNetwork\FastConnection.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\FastCyclicNetwork\FastCyclicNetwork.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\NeuralNets\FastCyclicNetwork\FastRelaxingCyclicNetwork.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\OutputMappingSignalArray.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\OutputSignalArray.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Phenomes\SignalArray.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\SharpNeatException.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\SpeciationStrategies\GenomeDistancePair.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\SpeciationStrategies\KMeansClusteringStrategy.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\SpeciationStrategies\ParallelKMeansClusteringStrategy.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\SpeciationStrategies\RandomClusteringStrategy.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\SpeciationStrategies\SpeciationUtils.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Utility\Point2DDouble.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Utility\UInt32IdGenerator.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Utility\Utilities.cs" />
+    <Compile Include="Malmo\SharpNeat\SharpNeatLib\Utility\XmlIoUtils.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -184,6 +346,9 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Malmo\SharpNeat\SharpNeatDomains\SharpNeatDomains.csproj" />
+    <Content Include="Malmo\SharpNeat\SharpNeatDomains\SharpNeatDomains.experiments.xml" />
+    <Content Include="Malmo\SharpNeat\SharpNeatLib\SharpNeatLib.csproj" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -193,6 +358,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Malmo\SharpNeat\SharpNeatDomains\packages.config" />
+    <Content Include="Malmo\SharpNeat\SharpNeatDomains\Settings.StyleCop" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -225,6 +393,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="EvolutionDB\Candidates\" />
+    <Folder Include="Malmo\Results\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -239,15 +408,28 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\malmoTestAgentInterface\RunMission.csproj">
-      <Project>{9ab26871-e3ed-4ba3-9c5c-0d97755ff243}</Project>
-      <Name>RunMission</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
