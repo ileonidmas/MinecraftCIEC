@@ -31,6 +31,22 @@ namespace MinecraftCIAC.Malmo
             return fullPath;
         }
 
+        public static int GetUserId()
+        {
+
+            string path = System.AppDomain.CurrentDomain.BaseDirectory + "/UserDB.txt";
+            if (!File.Exists(path))
+                File.Create(path);
+
+            var id = File.ReadLines(path).Count();
+            using (StreamWriter sw = new StreamWriter(path,true))
+            {
+                // Run through the structure grid and save all values to the file
+                sw.Write(id);
+                sw.WriteLine();
+            }
+            return id;
+        }
 
         public static string GetVideoPathWithoutDecoding(string username, string foldername)
         {
@@ -87,9 +103,9 @@ namespace MinecraftCIAC.Malmo
             return path;
         }
 
-        public static void CopyFilesToUserFolder(string filesLocation, string username)
+        public static void CopyFilesToUserFolder(string filesLocation, string username, string oldUsername)
         {
-            string source = candidatePath + "/" + username+ "/" + Path.GetFileName(filesLocation);
+            string source = candidatePath + "/" + oldUsername + "/" + Path.GetFileName(filesLocation);
             string dest = resultsPath + "/" + username;
             //Now Create all of the directories
             foreach (string dirPath in Directory.GetDirectories(source, "*",
