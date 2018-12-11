@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Security;
 using System.Text;
 using System.Threading;
 
@@ -117,7 +119,7 @@ namespace MinecraftCIAC.Malmo
              string missionXMLpath;
             //string missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\myworld.xml");
             
-            missionXMLpath = System.IO.File.ReadAllText(@"C:\inetpub\wwwroot\MyApp\bin\myworld.xml");
+            missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\Pierre\Documents\MinecraftCIEC\MinecraftCIAC\myworld.xml");
             
             mission = new MissionSpec(missionXMLpath, false);
             AddBlocks(mission);
@@ -163,16 +165,19 @@ namespace MinecraftCIAC.Malmo
             }
 
         }
+
+        [HandleProcessCorruptedStateExceptions]
+        [SecurityCritical]
         private void TryStartMission()
         {
             try
             {
-
                 mission.requestVideo(320, 240);
                 mission.setViewpoint(1);
                 var outputDirectory = FileUtility.CreateOutputDirectory(userName, folderName);
                 MissionRecordSpec missionRecord = new MissionRecordSpec(outputDirectory + "data.tgz");
                 missionRecord.recordMP4(60, 400000);
+                
                 agentHost.startMission(mission, availableClients, missionRecord, 0, "Test Builder");
             }
             catch (Exception ex)

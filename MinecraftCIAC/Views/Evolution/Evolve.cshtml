@@ -16,8 +16,8 @@
     <video width="320" height="240" src="~/Results/Users/@Model.ElementAt(0).DirectoryPath" controls autoplay />
 </div>
 <div>
-    @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 2 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })    
-    @Html.ActionLink("Evolve big", "Evolve", new { id = 0, fitness = 10 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })    
+    @Html.ActionLink("Evolve small", "Evolve", new { id = 0, fitness = 1 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })    
+    @Html.ActionLink("Evolve big", "Evolve", new { id = 0, fitness = 2 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })    
     @Html.ActionLink("Perform novelty search", "Evolve", new { id = 0, fitness = -1 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })    
 </div>
 
@@ -43,10 +43,10 @@
                 <video width="320" height="240" src="~/Results/Users/@Model.ElementAt(i).DirectoryPath" controls autoplay />
             </td>
             <td>
-                @Html.ActionLink("Evolve small", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 2 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })
+                @Html.ActionLink("Evolve small", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 1 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })
             </td>
             <td>
-                @Html.ActionLink("Evolve big", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 10 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })
+                @Html.ActionLink("Evolve big", "Evolve", new { id = Model.ElementAt(i).ID, fitness = 2 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })
             </td>
             <td>
                 @Html.ActionLink("Perform novelty search", "Evolve", new { id = Model.ElementAt(i).ID, fitness = -1 }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })
