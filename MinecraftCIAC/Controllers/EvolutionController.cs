@@ -17,30 +17,35 @@ using System.Web.Mvc;
 using System.IO;
 using System.Xml;
 using MinecraftCIAC.Global;
+using Microsoft.Research.Malmo;
+using RunMission.Evolution.Enums;
+using System.Diagnostics;
 
 namespace MinecraftCIAC.Controllers
 {
     public class EvolutionController : Controller
     {
 
-        //private EvolutionDBContext db = new EvolutionDBContext();
+        private EvolutionDBContext db = new EvolutionDBContext();
 
         // GET: Evolution
         public ActionResult Index()
         {
-           // var ip = getIPAddress(HttpContext.Request);
+            //id part
             
-            //var list = db.Evolutions.ToList();
-            //foreach (var evolution in list)
-            //{
-            //    string result = Path.GetFileName(evolution.DirectoryPath);
-            //    string path = FileUtility.GetUserDBVideoPath("Leo", result);
-            //    evolution.ParentVideoPath = path;
-            //}
-            //list.ElementAt(0).DirectoryPath = "video.mp4";
-            var list = new List<Evolution>();
-            return View(list);            
-            //return View();
+
+            int userId = FileUtility.GetUserId();
+            HttpContext.Session.Add("userId", userId);
+            HttpContext.Session.Add("sequence", "");
+            var list = db.Evolutions.ToList();
+            foreach (var evolution in list)
+            {
+                string result = Path.GetFileName(evolution.DirectoryPath);
+                string path = FileUtility.GetUserDBVideoPath(evolution.Username, result);
+                evolution.ParentVideoPath = path;
+            }
+            
+            return View(list);     
         }
         
         
@@ -53,7 +58,7 @@ namespace MinecraftCIAC.Controllers
         public ActionResult Evolve(int id = -1, int fitness = 0)
         {
             // Get username for this evolution
-            string username = "Leo";//Request.UserHostAddress;
+            string username = HttpContext.Session["userId"].ToString().ToString();//Request.UserHostAddress;
 
             // Prepares next evolution view
             List<Evolution> evolutions = new List<Evolution>();
@@ -72,11 +77,10 @@ namespace MinecraftCIAC.Controllers
             }
             XmlDocument xmlConfig = new XmlDocument();
             //xmlConfig.Load(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\minecraft.config.xml");
-            //if (System.Environment.UserName == "lema")
-            //    xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            //else
-            //    xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            xmlConfig.Load("C:\\inetpub\\wwwroot\\MyApp\\bin\\minecraft.config.xml");
+            if (System.Environment.UserName == "lema")
+                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            else
+                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
 
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
@@ -87,7 +91,7 @@ namespace MinecraftCIAC.Controllers
             {
                 if (fitness < 0)
                 {
-                    //Transition CIEC -> Novelty
+                    //Novelty
 
                     //load population, choose selected as parent and create offsprings
                     var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
@@ -135,7 +139,9 @@ namespace MinecraftCIAC.Controllers
                     doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
 
                     // Save population after evaluating the generation
-
+                    string action = "2";
+                    string sequence = HttpContext.Session["sequence"].ToString();
+                    HttpContext.Session.Add("sequence", sequence + action);
                     for (int i = 0; i < algorithm.GenomeList.Count; i++)
                     {
                         string folderName = i.ToString();
@@ -144,7 +150,7 @@ namespace MinecraftCIAC.Controllers
                             videoPath = FileUtility.GetVideoPathWithoutDecoding(username, folderName);
                         else
                             videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
-                        Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                        Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i, Username = HttpContext.Session["userId"].ToString() };
                         evolutions.Add(evolution);
                     }
 
@@ -152,7 +158,7 @@ namespace MinecraftCIAC.Controllers
                 }
                 else
                 {
-                    //Transition CIEC -> CIEC
+                    //IEC
 
                     // read current population and set fitness of the chosen genome
                     var reader = XmlReader.Create(FileUtility.GetUserResultPath(username) + "Population.xml");
@@ -198,6 +204,14 @@ namespace MinecraftCIAC.Controllers
                     var doc = NeatGenomeXmlIO.SaveComplete(algorithm.GenomeList, false);
                     doc.Save(FileUtility.GetUserResultPath(username) + "Population.xml");
 
+                    string action = "";
+                    if (fitness == 1)
+                        action = "0";
+                    else
+                        action = "1";
+                    string sequence = HttpContext.Session["sequence"].ToString();
+                    HttpContext.Session.Add("sequence", sequence + action);
+
                     for (int i = 0; i < algorithm.GenomeList.Count; i++)
                     {
                         string folderName = i.ToString();
@@ -206,7 +220,7 @@ namespace MinecraftCIAC.Controllers
                             videoPath = FileUtility.GetVideoPathWithoutDecoding(username, folderName);
                         else
                             videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
-                        Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                        Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i, Username = HttpContext.Session["userId"].ToString() };
                         evolutions.Add(evolution);
                         FileUtility.SaveCurrentGenome(username, i.ToString(), algorithm.GenomeList[i]);
                     }
@@ -230,7 +244,7 @@ namespace MinecraftCIAC.Controllers
                 {
                     string folderName = i.ToString();
                     string videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);                    
-                    Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                    Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = -1, Sequence = ""};
                     evolutions.Add(evolution);
                     FileUtility.SaveCurrentGenome(username, i.ToString(), algorithm.GenomeList[i]);
                 }
@@ -258,16 +272,18 @@ namespace MinecraftCIAC.Controllers
         /// Method to continue on another users saved progress of their evolution
         /// </summary>
         /// <param name="filesLocation">Path to the files of the evolution a user wants to branch from</param>
-        public ActionResult Continue(string filesLocation)
+        public ActionResult Continue(string filesLocation,string oldUsername, string sequence)
         {
             // get username
-            string username = "Leo";
+            string username = HttpContext.Session["userId"].ToString();
+            if(sequence == null)
+                HttpContext.Session.Add("sequence", "" );
 
             // create clean user folder in Results
             FileUtility.CreateUserFolder(username);
 
             // move files to username folder in Results
-            FileUtility.CopyFilesToUserFolder(filesLocation, username);
+            FileUtility.CopyFilesToUserFolder(filesLocation, username, oldUsername);
 
             // Get client pool used for running the evaluations
             MalmoClientPool clientPool = Global.GloabalVariables.MalmoClientPool;
@@ -275,11 +291,11 @@ namespace MinecraftCIAC.Controllers
             //recreate experiment and load poppulation
             MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
             XmlDocument xmlConfig = new XmlDocument();
-            //if (System.Environment.UserName == "lema")
-            //    xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            //else
-            //    xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            xmlConfig.Load("C:\\inetpub\\wwwroot\\MyApp\\bin\\minecraft.config.xml");
+            if (System.Environment.UserName == "lema")
+                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            else
+                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
+            //xmlConfig.Load("C:\\inetpub\\wwwroot\\MyApp\\bin\\minecraft.config.xml");
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
             // read current population
@@ -296,13 +312,125 @@ namespace MinecraftCIAC.Controllers
                 videoPath = FileUtility.GetVideoPathWithoutDecoding(username, i.ToString());
                 
                 //TODO: Change branch ID to 0
-                Evolution evolution = new Evolution() { ID = i , DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i };
+                Evolution evolution = new Evolution() { ID = i , DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i, Username = HttpContext.Session["userId"].ToString(), Sequence = sequence};
                 evolutions.Add(evolution);
             }
-            return View("Evolve", evolutions);
 
-            return View(evolutions);
+            //TempData["msg"] = "<script>alert('"+sequence+"');</script>";
+            if (sequence== null)
+                return View("FirstEvolution", evolutions);
+            return View("Evolve", evolutions);
         }
+
+        //public ActionResult Test()
+        //{
+            
+        //    Environment.SetEnvironmentVariable("MALMO_XSD_PATH", @"C:\inetpub\wwwroot\MyApp\MalmoSource\Schemas", System.EnvironmentVariableTarget.User);
+        //    //System.Environment.SetEnvironmentvariable("MALMO_XSD_PATH", @"C:\Users\lema\Desktop\School\Malmo\Schemas", System.EnvironmentvariableTarget.user)
+        //    AgentHost agentHost = new AgentHost();
+        //    AgentHelper agentHelper = new AgentHelper(agentHost);
+        //    float startX = -230.5f, startY = 227.5f, startZ = -555.5f;
+        //    string xml;
+        //    xml = System.IO.File.ReadAllText("C:\\inetpub\\wwwroot\\MyApp\\bin\\myworld1.xml");
+
+        //    MissionSpec mission = new MissionSpec(xml, false);
+        //    mission.setModeToCreative();
+        //    MissionRecordSpec missionRecord = new MissionRecordSpec();
+        //    missionRecord.recordCommands();
+        //    // missionRecord.recordMP4(20, 400000);
+        //    //missionRecord.recordRewards();
+        //    missionRecord.recordObservations();
+        //    bool connected = false;
+        //    int attempts = 0;
+        //    while (!connected)
+        //    {
+        //        try
+        //        {
+        //            attempts += 1;
+        //            agentHost.startMission(mission, missionRecord);
+        //            connected = true;
+        //        }
+        //        catch (MissionException ex)
+        //        {
+        //            // Using catch(Exception ex) would also work, but specifying MissionException allows
+        //            // us to access the error code:
+        //            Console.Error.WriteLine("Error starting mission: {0}", ex.Message);
+        //            Console.Error.WriteLine("Error code: {0}", ex.getMissionErrorCode());
+        //            // We can do more specific error handling using this code, eg:
+        //            if (ex.getMissionErrorCode() == MissionException.MissionErrorCode.MISSION_INSUFFICIENT_CLIENTS_AVAILABLE)
+        //                Console.Error.WriteLine("Have you started a Minecraft client?");
+        //            if (attempts >= 3)   // Give up after three goes.
+        //                Environment.Exit(1);
+        //            Thread.Sleep(1000); // Wait a second and try again.
+        //        }
+        //    }
+        //    WorldState worldState;
+
+        //    Console.WriteLine("Waiting for the mission to start");
+        //    do
+        //    {
+        //        Console.Write(".");
+        //        Thread.Sleep(100);
+        //        worldState = agentHost.getWorldState();
+
+        //        foreach (TimestampedString error in worldState.errors) Console.Error.WriteLine("Error: {0}", error.text);
+        //    }
+        //    while (!worldState.has_mission_begun);
+
+        //    Console.WriteLine();
+
+
+        //    Thread.Sleep(1000);
+
+        //    bool runonce = false;
+
+        //    do
+        //    {
+        //        try
+        //        {
+        //            if (!runonce)
+        //            {
+
+        //                resetConstantPosition(agentHost, agentHelper);
+        //                agentHelper.PlaceBlockAbsolute(Direction.Front);
+
+        //                resetConstantPosition(agentHost, agentHelper);
+        //                agentHelper.Teleport(Direction.Left);
+
+        //                resetConstantPosition(agentHost, agentHelper);
+        //                agentHelper.Teleport(Direction.Left);
+
+        //                resetConstantPosition(agentHost, agentHelper);
+        //                agentHelper.Teleport(Direction.Left);
+
+        //                resetConstantPosition(agentHost, agentHelper);
+        //                agentHelper.Teleport(Direction.Left);
+
+        //                resetConstantPosition(agentHost, agentHelper);
+        //                agentHelper.PlaceBlockAbsolute(Direction.Under);
+        //                resetConstantPosition(agentHost, agentHelper);
+        //                agentHelper.DestroyBlockAbsolute(Direction.Under);
+        //                runonce = true;
+        //            }
+
+        //        }
+        //        catch (ArgumentOutOfRangeException ex)
+        //        {
+        //        }
+        //        foreach (TimestampedReward reward in worldState.rewards) Console.Error.WriteLine("Summed reward: {0}", reward.getValue());
+        //        foreach (TimestampedString error in worldState.errors) Console.Error.WriteLine("Error: {0}", error.text);
+        //    }
+        //    while (worldState.is_mission_running);
+        //    //Console.ReadKey();
+        //    return RedirectToAction("Index");
+        //}
+
+        //private static void resetConstantPosition(AgentHost agentHost, AgentHelper agentHelper)
+        //{
+        //    WorldState worldState = agentHost.getWorldState();
+        //    agentHelper.ConstantObservations = worldState.observations;
+        //}
+
 
         public ActionResult Return()
         {
@@ -315,16 +443,16 @@ namespace MinecraftCIAC.Controllers
         public ActionResult Publish()
         {
             // save to candidate path
-            string evolutionPath = FileUtility.SaveCurrentProgressAndReturnPath("Leo");
+            string evolutionPath = FileUtility.SaveCurrentProgressAndReturnPath(HttpContext.Session["userId"].ToString());
             string videoPath = FileUtility.GetVideoPathFromEvolutionPath(evolutionPath);
 
             // add stuff to database
-            //int count = db.Evolutions.Count() + 1;
+            int count = db.Evolutions.Count() + 1;
 
-            ////TODO: Change BranchID to ID of the chosen evolution, if this is a continution of another users progress
-            //db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = evolutionPath, ParentVideoPath = videoPath});
+            //TODO: Change BranchID to ID of the chosen evolution, if this is a continution of another users progress
+            db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = evolutionPath, ParentVideoPath = videoPath, Username = HttpContext.Session["userId"].ToString(), Sequence = HttpContext.Session["sequence"].ToString()});
 
-            //db.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int? id)
@@ -333,54 +461,25 @@ namespace MinecraftCIAC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //Evolution evo = db.Evolutions.Find(id);
-            //if (evo == null)
-            //{
-            //    return HttpNotFound();
-            //}
+            Evolution evo = db.Evolutions.Find(id);
+            if (evo == null)
+            {
+                return HttpNotFound();
+            }
 
-            //db.Evolutions.Remove(evo);
-            //db.SaveChanges();
-            //FileUtility.DeleteDirectory(evo.DirectoryPath);
+            db.Evolutions.Remove(evo);
+            db.SaveChanges();
+            FileUtility.DeleteDirectory(evo.DirectoryPath);
             return RedirectToAction("Index");
         }
 
-        /*
-       public static string getIPAddress(HttpRequestBase request)
-       {
-           string szRemoteAddr = request.UserHostAddress;
-           string szXForwardedFor = request.ServerVariables["X_FORWARDED_FOR"];
-           string szIP = "";
-
-           if (szXForwardedFor == null)
-           {
-               szIP = szRemoteAddr;
-           }
-           else
-           {
-               szIP = szXForwardedFor;
-               if (szIP.IndexOf(",") > 0)
-               {
-                   string[] arIPs = szIP.Split(',');
-
-                   foreach (string item in arIPs)
-                   {
-
-                           if (item!= null)
-                           return item;
-
-                   }
-               }
-           }
-           return szIP;
-       }
-       */
+       
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                //db.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

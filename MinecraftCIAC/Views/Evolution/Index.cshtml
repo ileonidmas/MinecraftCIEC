@@ -7,6 +7,9 @@
     @Html.ActionLink("Start new evolution", "Evolve", new { }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })
 </div>
 
+@*<div>
+    @Html.ActionLink("Test", "Test", new { }, new { onclick = "javascript:showLoading();", @class = "btn btn-primary", @style = "color:white" })
+</div>*@
 
 <table class="table-striped">
     <tr>
@@ -16,28 +19,41 @@
             <th>
                 @Html.DisplayNameFor(model => model.ID)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sequence)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
         }
     </tr>
     @foreach (var item in Model)
     {
-        <tr>
+    <tr>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.ID)
-            </td>
-            <td>
-                <video width="320" height="240" src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />
-            </td>
-            <td>
-                @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath }, new { @class = "btn btn-primary", @style = "color:white" })
-            </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sequence)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Username)
+        </td>
+        <td>
+            <video width="320" height="240" src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />
+        </td>
+        <td>
+            @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath, oldUsername = item.Username, sequence = item.Sequence }, new { @class = "btn btn-primary", @style = "color:white" })
+        </td>
 
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-primary", @style = "color:white" })
-            </td>
-        </tr>
+        <td>
+            @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-primary", @style = "color:white" })
+        </td>
+    </tr>
     }
 
 
-    
+
 
