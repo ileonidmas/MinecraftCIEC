@@ -42,7 +42,7 @@ namespace MinecraftCIAC.Controllers
             foreach (var evolution in list)
             {
                 string result = Path.GetFileName(evolution.DirectoryPath);
-                string path = FileUtility.GetUserDBVideoPath("Leo", result);
+                string path = FileUtility.GetUserDBVideoPath(evolution.Username, result);
                 evolution.ParentVideoPath = path;
             }
             return View(list);           

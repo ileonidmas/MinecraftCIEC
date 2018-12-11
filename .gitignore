@@ -9,6 +9,7 @@ MinecraftCIAC/bin/
 MinecraftCIAC/obj/
 MinecraftCIAC/EvolutionDB/Candidates
 MinecraftCIAC/Results/Users
+MinecraftCIAC/App_Data
 
 # Simulator folder
 malmoTestAgentInterface/bin/
