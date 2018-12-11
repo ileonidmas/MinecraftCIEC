@@ -114,7 +114,6 @@ namespace MinecraftCIAC.Malmo
 
         private void InitializeMission()
         {
-             string missionXMLpath;
             string missionXMLpath = System.IO.File.ReadAllText(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\myworld.xml");
             
             //missionXMLpath = System.IO.File.ReadAllText(@"C:\inetpub\wwwroot\MyApp\bin\myworld.xml");
