@@ -26,6 +26,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Username)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchID)
+            </th>
         }
     </tr>
     @foreach (var item in Model)
@@ -40,6 +43,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Username)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BranchID)
         </td>
         <td>
             <video width="320" height="240" src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />

@@ -37,6 +37,7 @@ namespace MinecraftCIAC.Controllers
             int userId = FileUtility.GetUserId();
             HttpContext.Session.Add("userId", userId);
             HttpContext.Session.Add("sequence", "");
+            HttpContext.Session.Add("branchId", "");
             var list = db.Evolutions.ToList();
             foreach (var evolution in list)
             {
@@ -76,12 +77,7 @@ namespace MinecraftCIAC.Controllers
                 experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
             }
             XmlDocument xmlConfig = new XmlDocument();
-            //xmlConfig.Load(@"C:\Users\christopher\Documents\GitHub\MinecraftCIEC\malmoTestAgentInterface\minecraft.config.xml");
-            if (System.Environment.UserName == "lema")
-                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            else
-                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-
+            xmlConfig.Load(System.AppDomain.CurrentDomain.BaseDirectory + "minecraft.config.xml");
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
             // The evolutionary algorithm object
@@ -249,6 +245,7 @@ namespace MinecraftCIAC.Controllers
                     FileUtility.SaveCurrentGenome(username, i.ToString(), algorithm.GenomeList[i]);
                 }
 
+                HttpContext.Session.Add("branchId", "-1");
                 return View("FirstEvolution", evolutions);
             }
 
@@ -276,8 +273,12 @@ namespace MinecraftCIAC.Controllers
         {
             // get username
             string username = HttpContext.Session["userId"].ToString();
+            // set sequence if it existed
             if(sequence == null)
                 HttpContext.Session.Add("sequence", "" );
+            // set previous username for branching
+
+            HttpContext.Session.Add("branchId", oldUsername);
 
             // create clean user folder in Results
             FileUtility.CreateUserFolder(username);
@@ -291,11 +292,8 @@ namespace MinecraftCIAC.Controllers
             //recreate experiment and load poppulation
             MinecraftBuilderExperiment experiment = new MinecraftBuilderExperiment(clientPool, "Simple", username);
             XmlDocument xmlConfig = new XmlDocument();
-            if (System.Environment.UserName == "lema")
-                xmlConfig.Load("C:\\Users\\lema\\Documents\\Github\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            else
-                xmlConfig.Load("C:\\Users\\Pierre\\Documents\\MinecraftCIEC\\malmoTestAgentInterface\\minecraft.config.xml");
-            //xmlConfig.Load("C:\\inetpub\\wwwroot\\MyApp\\bin\\minecraft.config.xml");
+
+            xmlConfig.Load(System.AppDomain.CurrentDomain.BaseDirectory + "minecraft.config.xml");
             experiment.Initialize("Minecraft", xmlConfig.DocumentElement);
 
             // read current population
@@ -450,7 +448,7 @@ namespace MinecraftCIAC.Controllers
             int count = db.Evolutions.Count() + 1;
 
             //TODO: Change BranchID to ID of the chosen evolution, if this is a continution of another users progress
-            db.Evolutions.Add(new Evolution() { ID = count, BranchID = 2, DirectoryPath = evolutionPath, ParentVideoPath = videoPath, Username = HttpContext.Session["userId"].ToString(), Sequence = HttpContext.Session["sequence"].ToString()});
+            db.Evolutions.Add(new Evolution() { ID = count, BranchID = int.Parse(HttpContext.Session["branchId"].ToString()), DirectoryPath = evolutionPath, ParentVideoPath = videoPath, Username = HttpContext.Session["userId"].ToString(), Sequence = HttpContext.Session["sequence"].ToString()});
 
             db.SaveChanges();
             return RedirectToAction("Index");
