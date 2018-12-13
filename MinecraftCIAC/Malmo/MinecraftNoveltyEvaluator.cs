@@ -20,7 +20,7 @@ namespace MinecraftCIAC.Malmo
 {
     public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox, NeatGenome>
     {
-        private readonly int NOVELTY_THRESHOLD = -1;
+        private readonly int NOVELTY_THRESHOLD = 1;
         private readonly int NOVELTY_KNEARSEST = 5;
         private readonly int POPULATION_SIZE = 5;
         private ulong _evalCount;
