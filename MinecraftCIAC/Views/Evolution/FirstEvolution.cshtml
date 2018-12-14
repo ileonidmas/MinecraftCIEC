@@ -14,20 +14,19 @@
 
 <h3>Candidates</h3>
 <table class="table-striped">
-    <tr>
-
+    @*<tr>
         <th>
             @Html.DisplayNameFor(model => model.ID)
         </th>
-    </tr>
+    </tr>*@
 
     @foreach (var item in Model)
     {
         <tr>
 
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.ID)
-            </td>
+            </td>*@
             <td>
                 <video width="320" height="240" src="~/Results/Users/@item.DirectoryPath" controls autoplay />
             </td>

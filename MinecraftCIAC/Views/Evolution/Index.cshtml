@@ -12,41 +12,19 @@
 </div>*@
 
 <table class="table-striped">
-    <tr>
+    @*<tr>
         @if (Model.Count() > 0)
         {
 
             <th>
                 @Html.DisplayNameFor(model => model.ID)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sequence)
-            </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BranchID)
-            </th>
+            
         }
-    </tr>
+    </tr>*@
     @foreach (var item in Model)
     {
     <tr>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.ID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Sequence)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Username)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BranchID)
-        </td>
         <td>
             <video width="320" height="240" src="~/EvolutionDB/Candidates/@item.ParentVideoPath" controls autoplay />
         </td>

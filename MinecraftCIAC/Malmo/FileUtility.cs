@@ -15,8 +15,8 @@ namespace MinecraftCIAC.Malmo
     {
 
         //private readonly static string resultsPath = "";
-        private readonly static string resultsPath = System.AppDomain.CurrentDomain.BaseDirectory + "/Results/Users";
-        private readonly static string candidatePath = System.AppDomain.CurrentDomain.BaseDirectory + "/EvolutionDB/Candidates";
+        private readonly static string resultsPath = System.AppDomain.CurrentDomain.BaseDirectory + "Results/Users";
+        private readonly static string candidatePath = System.AppDomain.CurrentDomain.BaseDirectory + "EvolutionDB/Candidates";
 
         public static string CreateOutputDirectory(string username, string foldername)
         {

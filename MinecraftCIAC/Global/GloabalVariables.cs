@@ -13,7 +13,7 @@ namespace MinecraftCIAC.Global
     {
         #region 
 
-        public static readonly int NUMBER_OF_AGENTS = 2;
+        public static readonly int NUMBER_OF_AGENTS = 5;
         public static readonly int POPULATION_SIZE = 5;
 
         #endregion

@@ -27,13 +27,18 @@ namespace MinecraftCIAC.Controllers
     {
 
         private EvolutionDBContext db = new EvolutionDBContext();
+        private readonly object userIDLock = new object();
 
         // GET: Evolution
         public ActionResult Index()
         {
             //id part
-            
-            int userId = FileUtility.GetUserId();
+            int userId = 0;
+            lock(userIDLock)
+            {
+                userId = FileUtility.GetUserId();
+            }
+
             HttpContext.Session.Add("userId", userId);
             HttpContext.Session.Add("sequence", "");
             HttpContext.Session.Add("branchId", "");
@@ -268,7 +273,7 @@ namespace MinecraftCIAC.Controllers
             
 
 
-            TempData["msg"] = "<script>alert('Happy thoughts');</script>";
+            //TempData["msg"] = "<script>alert('Happy thoughts');</script>";
 
            
 

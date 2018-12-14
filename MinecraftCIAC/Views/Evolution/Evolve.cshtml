@@ -25,20 +25,19 @@
 
 <h3>Candidates</h3>
 <table class="table-striped">
-    <tr>
-
+    @*<tr>
         <th>
             @Html.DisplayNameFor(model => model.ID)
         </th>
-    </tr>
+    </tr>*@
 
     @for (int i = 1; i < Model.Count(); i++)
     {
         <tr>
 
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => Model.ElementAt(i).ID)
-            </td>
+            </td>*@
             <td>
                 <video width="320" height="240" src="~/Results/Users/@Model.ElementAt(i).DirectoryPath" controls autoplay />
             </td>
