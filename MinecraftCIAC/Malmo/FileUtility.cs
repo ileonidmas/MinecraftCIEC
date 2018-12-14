@@ -44,7 +44,9 @@ namespace MinecraftCIAC.Malmo
                 // Run through the structure grid and save all values to the file
                 sw.Write(id);
                 sw.WriteLine();
+                sw.Close();
             }
+
             return id;
         }
 
@@ -218,6 +220,7 @@ namespace MinecraftCIAC.Malmo
                         sw.Write("0");
                 }
                 sw.WriteLine();
+                sw.Close();
             }
         }
 
@@ -245,6 +248,7 @@ namespace MinecraftCIAC.Malmo
             using(StreamWriter sw = new StreamWriter(dest, true))
             {
                 sw.WriteLine(structure);
+                sw.Close();
             }
         }
 
@@ -295,6 +299,7 @@ namespace MinecraftCIAC.Malmo
             using (StreamWriter w = File.AppendText(path))
             {
                 w.WriteLine("Crash at following point:" + line);
+                w.Close();
             }
         }
     }
