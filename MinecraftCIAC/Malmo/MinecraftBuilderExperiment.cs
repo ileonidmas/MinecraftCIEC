@@ -79,7 +79,7 @@ namespace MinecraftCIAC.Malmo
         /// </summary>
         public override bool EvaluateParents
         {
-            get { return true; }
+            get { return false; }
         }
     }
 }

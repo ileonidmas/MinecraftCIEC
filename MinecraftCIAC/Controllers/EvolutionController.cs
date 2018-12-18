@@ -117,10 +117,11 @@ namespace MinecraftCIAC.Controllers
                     // Initialize algorithm object using the current generation
                     algorithm = experiment.CreateEvolutionAlgorithm(offSprings[0].GenomeFactory, offSprings);
 
+                    
                     // Continue evolution after first generation if stop condition hasnt been met
                     if (!algorithm.StopConditionSatisfied)
                     {
-                        algorithm.StartContinue();
+                        algorithm.StartContinue();                        
                     }
 
                     while (algorithm.RunState != RunState.Paused && algorithm.RunState != RunState.Ready)

@@ -122,13 +122,13 @@ namespace MinecraftCIAC.Malmo
             if(name == "Novelty" || name == "Big mutation")
             {
                 //Big mutation or Novelty parameters
-                _neatGenomeParams.ConnectionWeightMutationProbability = 0.77;
-                _neatGenomeParams.AddConnectionMutationProbability = 0.18;
-                _neatGenomeParams.AddNodeMutationProbability = 0.01;
+                _neatGenomeParams.ConnectionWeightMutationProbability = 1.0;
+                _neatGenomeParams.AddConnectionMutationProbability = 0.48;
+                _neatGenomeParams.AddNodeMutationProbability = 0.28;
                 _neatGenomeParams.DeleteConnectionMutationProbability = 0.003;
                 _neatGenomeParams.NodeAuxStateMutationProbability = 0.0;
                 _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
-                _neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.4, 0, 0.0, 0.65));
+                _neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.9, 0, 0.0, 0.4));
             }
         }
 

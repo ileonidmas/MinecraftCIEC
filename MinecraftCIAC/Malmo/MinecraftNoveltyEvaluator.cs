@@ -88,7 +88,7 @@ namespace MinecraftCIAC.Malmo
             currentGenerationArchive.Add(structureGrid);
 
             // Wait until all in the current generation has been evaluated
-            while (currentGenerationArchive.Count < populationSize)
+            while (currentGenerationArchive.Count != populationSize)
             {
                 Thread.Sleep(1000);
             }
@@ -113,6 +113,7 @@ namespace MinecraftCIAC.Malmo
 
                         FileUtility.SaveCurrentGenome(username, foldername, genome);
                         FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
+                        FileUtility.SaveNovelStructure(username, foldername);
                         FileUtility.CopyCanditateToProperFolder(username, foldername, counter.ToString());
                         Console.WriteLine(noveltyDistance);
                     }
@@ -126,10 +127,10 @@ namespace MinecraftCIAC.Malmo
 
             while (distanceCount != populationSize)
             {
-
+                Thread.Sleep(1000);
             }
-
-            Thread.Sleep(1000);
+            
+            Thread.Sleep(1500);
             distanceCount = 0;
             populationSize = 0;
             currentGenerationArchive.Clear();
