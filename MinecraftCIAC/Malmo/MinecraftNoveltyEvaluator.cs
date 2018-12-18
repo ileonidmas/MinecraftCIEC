@@ -147,43 +147,51 @@ namespace MinecraftCIAC.Malmo
         /// <returns>Average novelty distance to k nearest neighbours</returns>
         private double getDistance(bool[] structureGrid)
         {
-            currentGenerationArchive.AddRange(novelBehaviourArchive);
+            //currentGenerationArchive.AddRange(novelBehaviourArchive);
+
+            var knearest = 0;
 
             List<int> novelDistances = new List<int>();
 
             //Compare the individual with each of the other individuals, in both novel archive and current generation
             var distance = 0;
-            for (int i = 0; i < currentGenerationArchive.Count; i++)
+
+            if (novelBehaviourArchive.Count != 0)
             {
-                if (structureGrid != currentGenerationArchive[i])
+                for (int i = 0; i < novelBehaviourArchive.Count; i++)
                 {
                     //Compare each structure block by block
                     for (int j = 0; j < 20 * 20 * 20; j++)
                     {
-                        if (structureGrid[j] != currentGenerationArchive[i][j])
+                        if (structureGrid[j] != novelBehaviourArchive[i][j])
                             distance++;
                     }
+
+                    novelDistances.Add(distance);
+                    distance = 0;
                 }
+
+                //Sort in ascending order
+                novelDistances.Sort((a, b) => a.CompareTo(b));
+                if (novelDistances.Count < NOVELTY_KNEARSEST)
+                    knearest = novelDistances.Count;
                 else
+                    knearest = NOVELTY_KNEARSEST;
+
+                //Find the summed up k-nearest novel distances and return the average of the sum
+                double avgNovelty = 0;
+                for (int i = 0; i < knearest; i++)
                 {
-                    Console.WriteLine("does work");
+                    avgNovelty += novelDistances[i];
                 }
 
-                novelDistances.Add(distance);
-                distance = 0;
-            }
-
-            //Sort in ascending order
-            novelDistances.Sort((a, b) => a.CompareTo(b));
-
-            //Find the summed up k-nearest novel distances and return the average of the sum
-            double avgNovelty = 0;
-            for (int i = 0; i < NOVELTY_KNEARSEST; i++)
+                return avgNovelty / knearest;
+            } else
             {
-                avgNovelty += novelDistances[i];
+                // Novelty archive is empty, add first one by returning a value higher than the threshold
+                return NOVELTY_THRESHOLD + 1;
             }
-
-            return avgNovelty / NOVELTY_KNEARSEST;
+                
         }
 
         /// <summary>
