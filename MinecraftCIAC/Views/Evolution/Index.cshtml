@@ -32,9 +32,9 @@
             @Html.ActionLink("Continue", "Continue", new { filesLocation = item.DirectoryPath, oldUsername = item.Username, sequence = item.Sequence }, new { @class = "btn btn-primary", @style = "color:white" })
         </td>
 
-        <td>
+        @*<td>
             @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-primary", @style = "color:white" })
-        </td>
+        </td>*@
     </tr>
     }
 

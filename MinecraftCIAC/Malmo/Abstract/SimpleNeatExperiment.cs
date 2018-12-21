@@ -119,12 +119,24 @@ namespace MinecraftCIAC.Malmo
                 _neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.15, 0, 0.0, 0.4));
             }
 
-            if(name == "Novelty" || name == "Big mutation")
+            if(name == "Big mutation")
             {
-                //Big mutation or Novelty parameters
+                // Big mutation parameters
+                _neatGenomeParams.ConnectionWeightMutationProbability = 0.77;
+                _neatGenomeParams.AddConnectionMutationProbability = 0.18;
+                _neatGenomeParams.AddNodeMutationProbability = 0.01;
+                _neatGenomeParams.DeleteConnectionMutationProbability = 0.003;
+                _neatGenomeParams.NodeAuxStateMutationProbability = 0.0;
+                _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
+                _neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.9, 0, 0.0, 0.4));
+            }
+
+            if(name == "Novelty")
+            {
+                //Novelty parameters
                 _neatGenomeParams.ConnectionWeightMutationProbability = 1.0;
                 _neatGenomeParams.AddConnectionMutationProbability = 0.48;
-                _neatGenomeParams.AddNodeMutationProbability = 0.28;
+                _neatGenomeParams.AddNodeMutationProbability = 0.1;
                 _neatGenomeParams.DeleteConnectionMutationProbability = 0.003;
                 _neatGenomeParams.NodeAuxStateMutationProbability = 0.0;
                 _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;

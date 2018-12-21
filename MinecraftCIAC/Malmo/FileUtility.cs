@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MinecraftCIAC.Malmo
@@ -288,6 +289,7 @@ namespace MinecraftCIAC.Malmo
             {
                 DeleteDirectory(dir);
             }
+            Thread.Sleep(1);// This makes the difference between whether it works or not. Sleep(0) is not enough.
 
             Directory.Delete(target_dir, false);
         }

@@ -20,9 +20,9 @@ namespace MinecraftCIAC.Malmo
 {
     public class MinecraftNoveltyEvaluator : IPhenomeEvaluator<IBlackBox, NeatGenome>
     {
-        private readonly int NOVELTY_THRESHOLD = 1;
+        private readonly double NOVELTY_THRESHOLD = 1.5;
         private readonly int NOVELTY_KNEARSEST = 3;
-        private readonly int POPULATION_SIZE = 5;
+        private readonly int POPULATION_SIZE = 4;
         private ulong _evalCount;
         private bool _stopConditionSatisfied;
         private MalmoClientPool clientPool;
@@ -156,43 +156,35 @@ namespace MinecraftCIAC.Malmo
 
             //Compare the individual with each of the other individuals, in both novel archive and current generation
             var distance = 0;
-
-            if (novelBehaviourArchive.Count != 0)
+            for (int i = 0; i < novelBehaviourArchive.Count; i++)
             {
-                for (int i = 0; i < novelBehaviourArchive.Count; i++)
+                //Compare each structure block by block
+                for (int j = 0; j < 20 * 20 * 20; j++)
                 {
-                    //Compare each structure block by block
-                    for (int j = 0; j < 20 * 20 * 20; j++)
-                    {
-                        if (structureGrid[j] != novelBehaviourArchive[i][j])
-                            distance++;
-                    }
-
-                    novelDistances.Add(distance);
-                    distance = 0;
+                    if (structureGrid[j] != novelBehaviourArchive[i][j])
+                        distance++;
                 }
 
-                //Sort in ascending order
-                novelDistances.Sort((a, b) => a.CompareTo(b));
-                if (novelDistances.Count < NOVELTY_KNEARSEST)
-                    knearest = novelDistances.Count;
-                else
-                    knearest = NOVELTY_KNEARSEST;
-
-                //Find the summed up k-nearest novel distances and return the average of the sum
-                double avgNovelty = 0;
-                for (int i = 0; i < knearest; i++)
-                {
-                    avgNovelty += novelDistances[i];
-                }
-
-                return avgNovelty / knearest;
-            } else
-            {
-                // Novelty archive is empty, add first one by returning a value higher than the threshold
-                return NOVELTY_THRESHOLD + 1;
+                novelDistances.Add(distance);
+                distance = 0;
             }
-                
+
+            //Sort in ascending order
+            novelDistances.Sort((a, b) => a.CompareTo(b));
+            if (novelDistances.Count < NOVELTY_KNEARSEST)
+                knearest = novelDistances.Count;
+            else
+                knearest = NOVELTY_KNEARSEST;
+
+            //Find the summed up k-nearest novel distances and return the average of the sum
+            double avgNovelty = 0;
+            for (int i = 0; i < knearest; i++)
+            {
+                avgNovelty += novelDistances[i];
+            }
+
+            return avgNovelty / knearest;
+
         }
 
         /// <summary>
