@@ -707,22 +707,22 @@ namespace MinecraftCIAC
 
             if (ShouldJumpDirection(direction))
             {
-                SendAbsoluteCommand("tpy", currentYPos + 1);
+                SendAbsoluteCommand("tpy", currentYPos + 1.05);
             }
 
             switch (direction)
             {
                 case Direction.Left:
-                    SendAbsoluteCommand("tpx", currentXPos + 1);
+                    SendAbsoluteCommand("tpx", currentXPos + 1.05);
                     break;
                 case Direction.Front:
-                    SendAbsoluteCommand("tpz", currentZPos + 1);
+                    SendAbsoluteCommand("tpz", currentZPos + 1.05);
                     break;
                 case Direction.Right:
-                    SendAbsoluteCommand("tpx", currentXPos - 1);
+                    SendAbsoluteCommand("tpx", currentXPos - 1.05);
                     break;
                 case Direction.Back:
-                    SendAbsoluteCommand("tpz", currentZPos - 1);
+                    SendAbsoluteCommand("tpz", currentZPos - 1.05);
                     break;
             }
 

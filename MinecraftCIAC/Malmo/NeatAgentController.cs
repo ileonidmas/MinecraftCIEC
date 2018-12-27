@@ -549,7 +549,7 @@ namespace MinecraftCIAC.Malmo
                 }
             }
             else if (placeBlock >= destroyBlock)
-            {                
+            {
                 if (direction == Direction.BackUnder || direction == Direction.BackTop)
                 {
                     direction = Direction.Back;
@@ -595,7 +595,7 @@ namespace MinecraftCIAC.Malmo
 
                 } else
                 {
-                    if(direction == Direction.Right)
+                    if (direction == Direction.Right)
                     {
                         if (!agentHelper.IsThereABlock(Direction.RightUnder))
                         {
@@ -623,7 +623,7 @@ namespace MinecraftCIAC.Malmo
                     }
                     else
                     {
-                        if(direction == Direction.Front)
+                        if (direction == Direction.Front)
                         {
                             if (!agentHelper.IsThereABlock(Direction.FrontUnder))
                             {
@@ -649,7 +649,7 @@ namespace MinecraftCIAC.Malmo
                             }
                         } else
                         {
-                            if(direction == Direction.Left)
+                            if (direction == Direction.Left)
                             {
                                 if (!agentHelper.IsThereABlock(Direction.LeftUnder))
                                 {
@@ -764,5 +764,142 @@ namespace MinecraftCIAC.Malmo
 
             return actionIsPerformed;
         }
+        //***************************************************** THIRD CONTROLLER ***********************************************
+
+        private bool outputToCommandsAbsAlt()
+        {
+            bool actionIsPerformed = false;
+
+
+            double action = Brain.OutputSignalArray[0];
+            double directionDouble = Brain.OutputSignalArray[1];
+            Direction direction = getDirection(directionDouble);
+
+
+            if (action<= 0.33d && direction != Direction.Under) //move
+            {
+                //Console.WriteLine("Trying to move " + direction);
+                if (direction == Direction.BackUnder || direction == Direction.BackTop)
+                {
+                    direction = Direction.Back;
+                }
+                else if (direction == Direction.RightUnder || direction == Direction.RightTop)
+                {
+                    direction = Direction.Right;
+                }
+                else if (direction == Direction.FrontUnder || direction == Direction.FrontTop)
+                {
+                    direction = Direction.Front;
+                }
+                else if (direction == Direction.LeftUnder || direction == Direction.LeftTop)
+                {
+                    direction = Direction.Left;
+                }
+                if (agentHelper.CanMoveThisDirection(direction))
+                {
+                    agentHelper.Teleport(direction);
+                    actionIsPerformed = true;
+                    //Console.WriteLine(String.Format("Move action performed"));
+                }
+                else
+                {
+                    Console.WriteLine("Agent stuck");
+                    return false;
+                }
+            } else
+            {
+                if (action<= 0.66d)//place block
+                {
+                    if (AgentHelper.IsThereABlock(direction))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        if (direction == Direction.Left)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.LeftUnder))
+                                return false;
+                        }
+                        else if (direction == Direction.Right)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.RightUnder))
+                                return false;
+                        }
+                        else if (direction == Direction.Front)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.FrontUnder))
+                                return false;
+                        }
+                        else if (direction == Direction.Back)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.BackUnder))
+                                return false;
+                        }
+                        else if (direction == Direction.LeftTop)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.Left))
+                                return false;
+                        }
+                        else if (direction == Direction.RightTop)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.Right))
+                                return false;
+                        }
+                        else if (direction == Direction.FrontTop)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.Front))
+                                return false;
+                        }
+                        else if (direction == Direction.BackTop)
+                        {
+                            if (!AgentHelper.IsThereABlock(Direction.Back))
+                                return false;
+                        }
+
+                        agentHelper.PlaceBlockAbsolute(direction);
+                        actionIsPerformed = true;
+                        agentHelper.setGridPosition(direction, true);
+                    }
+
+                } else // destroy
+                {
+                    if (agentHelper.IsThereABlock(direction))
+                    {
+                        agentHelper.DestroyBlockAbsolute(direction);
+                        actionIsPerformed = true;
+                        agentHelper.setGridPosition(direction, false);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Agent stuck");
+                        return false;
+                    }
+                }
+            }
+
+
+            return actionIsPerformed;
+        }
+
+
+        private Direction getDirection(double direction)
+        {
+            if (direction <= 0.077d) return Direction.Back;
+            else if (direction <= 0.154d) return Direction.Left;
+            else if (direction <= 0.231d) return Direction.Front;
+            else if (direction <= 0.308d) return Direction.Right;
+            else if (direction <= 0.385d) return Direction.BackTop;
+            else if (direction <= 0.462d) return Direction.LeftTop;
+            else if (direction <= 0.539d) return Direction.FrontTop;
+            else if (direction <= 0.616d) return Direction.RightTop;
+            else if (direction <= 0.693d) return Direction.BackUnder;
+            else if (direction <= 0.770d) return Direction.LeftUnder;
+            else if (direction <= 0.847d) return Direction.FrontUnder;
+            else if (direction <= 0.924d) return Direction.RightUnder;
+            else return Direction.Under;
+
+        }
+
     }
 }

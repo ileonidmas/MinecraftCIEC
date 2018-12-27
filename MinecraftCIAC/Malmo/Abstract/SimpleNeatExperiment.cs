@@ -110,37 +110,37 @@ namespace MinecraftCIAC.Malmo
             if(name == "Small mutation")
             {
                 // Small mutation parameters
-                _neatGenomeParams.ConnectionWeightMutationProbability = 0.33;
-                _neatGenomeParams.AddConnectionMutationProbability = 0.07;
-                _neatGenomeParams.AddNodeMutationProbability = 0.001;
+                _neatGenomeParams.ConnectionWeightMutationProbability = 0.43;
+                _neatGenomeParams.AddConnectionMutationProbability = 0.25;
+                _neatGenomeParams.AddNodeMutationProbability = 1.0;
                 _neatGenomeParams.DeleteConnectionMutationProbability = 0.003;
                 _neatGenomeParams.NodeAuxStateMutationProbability = 0.0;
                 _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
-                _neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.15, 0, 0.0, 0.4));
+                //_neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.15, 0, 0.0, 0.4));
             }
 
             if(name == "Big mutation")
             {
                 // Big mutation parameters
-                _neatGenomeParams.ConnectionWeightMutationProbability = 0.77;
-                _neatGenomeParams.AddConnectionMutationProbability = 0.18;
-                _neatGenomeParams.AddNodeMutationProbability = 0.01;
+                _neatGenomeParams.ConnectionWeightMutationProbability = 0.65;
+                _neatGenomeParams.AddConnectionMutationProbability = 0.48;
+                _neatGenomeParams.AddNodeMutationProbability = 1.0;
                 _neatGenomeParams.DeleteConnectionMutationProbability = 0.003;
                 _neatGenomeParams.NodeAuxStateMutationProbability = 0.0;
                 _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
-                _neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.9, 0, 0.0, 0.4));
+                //_neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.9, 0, 0.0, 0.4));
             }
 
             if(name == "Novelty")
             {
                 //Novelty parameters
-                _neatGenomeParams.ConnectionWeightMutationProbability = 1.0;
-                _neatGenomeParams.AddConnectionMutationProbability = 0.48;
-                _neatGenomeParams.AddNodeMutationProbability = 0.1;
+                _neatGenomeParams.ConnectionWeightMutationProbability = 0.87;
+                _neatGenomeParams.AddConnectionMutationProbability = 0.67;
+                _neatGenomeParams.AddNodeMutationProbability = 1.0;
                 _neatGenomeParams.DeleteConnectionMutationProbability = 0.003;
                 _neatGenomeParams.NodeAuxStateMutationProbability = 0.0;
                 _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
-                _neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.9, 0, 0.0, 0.4));
+                //_neatGenomeParams.ConnectionMutationInfoList.Add(new ConnectionMutationInfo(1, ConnectionPerturbanceType.JiggleGaussian, ConnectionSelectionType.Proportional, 0.9, 0, 0.0, 0.4));
             }
         }
 
