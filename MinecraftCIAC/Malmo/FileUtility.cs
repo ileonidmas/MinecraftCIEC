@@ -294,15 +294,5 @@ namespace MinecraftCIAC.Malmo
             Directory.Delete(target_dir, false);
         }
 
-        public static void writeToFileIISDebug(string line)
-        {
-            string path = @"C:\crashdump\Output_Debug_ISS.txt";
-
-            using (StreamWriter w = File.AppendText(path))
-            {
-                w.WriteLine("Crash at following point:" + line);
-                w.Close();
-            }
-        }
     }
 }

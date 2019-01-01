@@ -83,19 +83,9 @@ namespace MinecraftCIAC.Malmo
             return new FitnessInfo(0, 0);
         }
 
-        /// <summary>
-        /// Returns the score for a game. Scoring is 10 for a win, 1 for a draw
-        /// and 0 for a loss. Note that scores cannot be smaller than 0 because
-        /// NEAT requires the fitness score to be positive.
-        /// </summary>
-        private int getScore()
-        {
-            return 0;
-        }
 
         /// <summary>
         /// Reset the internal state of the evaluation scheme if any exists.
-        /// Note. The TicTacToe problem domain has no internal state. This method does nothing.
         /// </summary>
         public void Reset()
         {

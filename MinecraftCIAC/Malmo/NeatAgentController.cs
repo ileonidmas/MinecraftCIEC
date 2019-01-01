@@ -50,39 +50,9 @@ namespace MinecraftCIAC.Malmo
 
             // Convert the world observations into an input array for the network
             setInputSignalArray(Brain.InputSignalArray, observations, agentPosition);
+
             // Activate the network
             Brain.Activate();
-            // Convert the action and perform the command
-            //outputToCommands();
-
-            //if (runOnce)
-            //{
-            //    agentHelper.PlaceBlockAbsolute(Direction.Front);
-            //    agentHelper.setGridPosition(Direction.Front, true);
-
-            //    agentHelper.PlaceBlockAbsolute(Direction.FrontTop);
-            //    agentHelper.setGridPosition(Direction.FrontTop, true);
-
-            //    agentHelper.Teleport(Direction.Right);
-            //    var worldState = AgentHelper.AgentHost.getWorldState();
-            //    AgentHelper.ConstantObservations = worldState.observations;
-
-            //    agentHelper.Teleport(Direction.Front);
-            //    worldState = AgentHelper.AgentHost.getWorldState();
-            //    AgentHelper.ConstantObservations = worldState.observations;
-
-            //    agentHelper.PlaceBlockAbsolute(Direction.Under);
-            //    agentHelper.setGridPosition(Direction.Under, true);
-
-            //    worldState = AgentHelper.AgentHost.getWorldState();
-            //    AgentHelper.ConstantObservations = worldState.observations;
-
-            //    agentHelper.PlaceBlockAbsolute(Direction.LeftTop);
-            //    agentHelper.setGridPosition(Direction.LeftTop, true);
-
-            //    runOnce = false;
-            //}
-
             agentNotStuck = outputToCommandsAbs();
         }
 
@@ -180,49 +150,7 @@ namespace MinecraftCIAC.Malmo
                     direction = Direction.Under;
                     break;
             }
-
-            /*
-            if(directionRaw < (1d / 13d))
-            {
-                direction = Direction.Under;
-            } else if (directionRaw >= (1d / 13d) && directionRaw < (2d / 13d))
-            {
-                direction = Direction.BackUnder;
-            } else if (directionRaw >= (2d / 13d) && directionRaw < (3d / 13d))
-            {
-                direction = Direction.LeftUnder;
-            } else if (directionRaw >= (3d / 13d) && directionRaw < (4d / 13d))
-            {
-                direction = Direction.FrontUnder;
-            } else if (directionRaw >= (4d / 13d) && directionRaw < (5d / 13d))
-            {
-                direction = Direction.RightUnder;
-            } else if (directionRaw >= (5d / 13d) && directionRaw < (6d / 13d))
-            {
-                direction = Direction.Back;
-            } else if (directionRaw >= (6d / 13d) && directionRaw < (7d / 13d))
-            {
-                direction = Direction.Left;
-            } else if (directionRaw >= (7d / 13d) && directionRaw < (8d / 13d))
-            {
-                direction = Direction.Front;
-            } else if (directionRaw >= (8d / 13d) && directionRaw < (9d / 13d))
-            {
-                direction = Direction.Right;
-            } else if (directionRaw >= (9d / 13d) && directionRaw < (10d / 13d))
-            {
-                direction = Direction.BackTop;
-            } else if (directionRaw >= (10d / 13d) && directionRaw < (11d / 13d))
-            {
-                direction = Direction.LeftTop;
-            } else if (directionRaw >= (11d / 13d) && directionRaw < (12d / 13d))
-            {
-                direction = Direction.FrontTop;
-            } else if (directionRaw >= (12d / 13d) && directionRaw < (13d / 13d))
-            {
-                direction = Direction.RightTop;
-            }*/
-
+            
             if (move > placeBlock && move > destroyBlock && direction != Direction.Under)
             {
                 Console.WriteLine("Trying to move " + direction);
@@ -259,42 +187,42 @@ namespace MinecraftCIAC.Malmo
                 {
                     if (direction == Direction.BackTop && !agentHelper.IsThereABlock(Direction.Back))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
                     else if (direction == Direction.RightTop && !agentHelper.IsThereABlock(Direction.Right))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
                     else if (direction == Direction.FrontTop && !agentHelper.IsThereABlock(Direction.Front))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
                     else if (direction == Direction.LeftTop && !agentHelper.IsThereABlock(Direction.Left))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
                     else if (direction == Direction.Back && !agentHelper.IsThereABlock(Direction.BackUnder))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
                     else if (direction == Direction.Right && !agentHelper.IsThereABlock(Direction.RightUnder))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
                     else if (direction == Direction.Front && !agentHelper.IsThereABlock(Direction.FrontUnder))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
                     else if (direction == Direction.Left && !agentHelper.IsThereABlock(Direction.LeftUnder))
                     {
-                        //Console.WriteLine(String.Format("No action"));
+                        
                         return;
                     }
 
@@ -437,18 +365,8 @@ namespace MinecraftCIAC.Malmo
             {
                 agentHelper.SendCommand("jump", 1);
             }
-
-            //Console.WriteLine(String.Format("Move:{0} Strafee:{1} Place:{2} Destroy:{3} Yaw:{4} Pitch:{5} Jump:{6}", move,strafe,placeBlock,destroyBlock,yaw,pitch,jump));
-            //agentHelper.SendCommand("move " + move);
-            //agentHelper.SendCommand("strafe " + strafe);
-            //agentHelper.SendCommand("use " + Math.Round(placeBlock));
-
+                        
         }
-
-        //public void UpdateFitness()
-        //{
-        //    Fitness = agentHelper.CalculateGrid();
-        //}
 
 
         //***************************************************** THIRD CONTROLLER ***********************************************
@@ -519,7 +437,6 @@ namespace MinecraftCIAC.Malmo
 
             if (move > placeBlock && move > destroyBlock && direction != Direction.Under)
             {
-                //Console.WriteLine("Trying to move " + direction);
                 if (direction == Direction.BackUnder || direction == Direction.BackTop)
                 {
                     direction = Direction.Back;
@@ -540,7 +457,6 @@ namespace MinecraftCIAC.Malmo
                 {
                     agentHelper.Teleport(direction);
                     actionIsPerformed = true;
-                    //Console.WriteLine(String.Format("Move action performed"));
                 }
                 else
                 {
@@ -692,65 +608,12 @@ namespace MinecraftCIAC.Malmo
                 agentHelper.PlaceBlockAbsolute(direction);
                 actionIsPerformed = true;
                 agentHelper.setGridPosition(direction, true);
-
-                /*
-                if (!agentHelper.IsThereABlock(direction) || direction == Direction.Under)
-                {
-                    if (direction == Direction.BackTop && !agentHelper.IsThereABlock(Direction.Back))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    else if (direction == Direction.RightTop && !agentHelper.IsThereABlock(Direction.Right))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    else if (direction == Direction.FrontTop && !agentHelper.IsThereABlock(Direction.Front))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    else if (direction == Direction.LeftTop && !agentHelper.IsThereABlock(Direction.Left))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    else if (direction == Direction.Back && !agentHelper.IsThereABlock(Direction.BackUnder))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    else if (direction == Direction.Right && !agentHelper.IsThereABlock(Direction.RightUnder))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    else if (direction == Direction.Front && !agentHelper.IsThereABlock(Direction.FrontUnder))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    else if (direction == Direction.Left && !agentHelper.IsThereABlock(Direction.LeftUnder))
-                    {
-                        //Console.WriteLine(String.Format("No action"));
-                        return;
-                    }
-                    agentHelper.PlaceBlockAbsolute(direction);
-                    actionIsPerformed = true;
-                    //Console.WriteLine(String.Format("Place action performed"));
-                    agentHelper.setGridPosition(direction, true);                    
-                }
-                */
             }
             else
             {
-                //Console.WriteLine("Trying to destroy block  " + direction);
                 if (agentHelper.IsThereABlock(direction))
                 {
                     agentHelper.DestroyBlockAbsolute(direction);
-
-                    //Console.WriteLine(String.Format("Destroy action performed"));
 
                     actionIsPerformed = true;
 

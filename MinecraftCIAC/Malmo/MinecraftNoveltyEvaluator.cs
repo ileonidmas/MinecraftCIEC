@@ -202,36 +202,6 @@ namespace MinecraftCIAC.Malmo
         }
 
         /// <summary>
-        /// Saves the novel structure in the novel archive folder associated to this novelty evolution
-        /// </summary>
-        /// <param name="structureGrid">The minecraft structure</param>
-        private void saveNovelStructure(bool[] structureGrid, int index)
-        {
-            //Path to the file to save the novel structure in
-            String novelFilePath = Path.Combine(noveltyArchivePath, index.ToString());
-
-            //Create the file and save all values to the file
-            using (StreamWriter sw = new StreamWriter(novelFilePath))
-            {
-                // Run through the structure grid and save all values to the file
-                for (int j = 0; j < structureGrid.Length; j++)
-                {
-                    sw.WriteLine(structureGrid[j]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns the score for a game. Scoring is 10 for a win, 1 for a draw
-        /// and 0 for a loss. Note that scores cannot be smaller than 0 because
-        /// NEAT requires the fitness score to be positive.
-        /// </summary>
-        private int getScore()
-        {
-            return 0;
-        }
-
-        /// <summary>
         /// Reset the internal state of the evaluation scheme if any exists.
         /// Note. The TicTacToe problem domain has no internal state. This method does nothing.
         /// </summary>
@@ -249,67 +219,7 @@ namespace MinecraftCIAC.Malmo
             }
 
         }
-
-        //Method for getting the 20x20x20 grid of the confined area according to agent position, from the 41x41x41 grid
-        //private bool[] getStructureGrid(bool[] fitnessGrid, AgentPosition agentPosition, int gridWLH)
-        //{
-        //    //The area in which the agent may place blocks are at most 20x20x20
-        //    bool[] flattenedFitnessGrid = new bool[20 * 20 * 20];
-
-        //    //The agent starts at Y position 227. Find where the layers within the area starts and ends, that are also above ground level
-        //    int layerStartY = (int)(Math.Abs(agentPosition.initialY - (agentPosition.currentY - ((gridWLH - 1) / 2))));
-
-        //    //If agent gets out of bound 20 blocks below ground level or 20 blocks above ground level, return a grid that would result in a fitness of 0
-        //    if (agentPosition.currentY < 227 - (gridWLH / 2) || agentPosition.currentY > 227 + (gridWLH / 2))
-        //    {
-        //        for (int i = 0; i < flattenedFitnessGrid.Length; i++)
-        //        {
-        //            flattenedFitnessGrid[i] = false;
-        //        }
-
-        //        return flattenedFitnessGrid;
-        //    }
-
-        //    //The agent starts at X position 0. Find where the layers within the area starts
-        //    int layerStartX = (int)(Math.Abs(agentPosition.currentX - 20)) + 1;
-
-        //    //The agent starts at Z position 0. Find where the layers within the area starts
-        //    int layerStartZ = (int)(Math.Abs(agentPosition.currentZ - 20)) + 1;
-
-        //    // Start at the layer above ground level and run through 20 layers from that layer in the flattened fitness grid
-        //    int currentBlockInGrid = (layerStartY * (gridWLH * gridWLH)) + (layerStartZ * gridWLH) + layerStartX;
-
-        //    int flattenedGridCounter = 0;
-
-        //    for (int y = 0; y < 20; y++)
-        //    {
-        //        //move one layer up in the y position
-        //        currentBlockInGrid = ((layerStartY + y) * (gridWLH * gridWLH)) + (layerStartZ * gridWLH) + layerStartX;
-
-        //        for (int z = 0; z < 20; z++)
-        //        {
-        //            for (int x = 0; x < 20; x++)
-        //            {
-        //                if (fitnessGrid[currentBlockInGrid].ToString() == "gold_ore")
-        //                {
-        //                    flattenedFitnessGrid[flattenedGridCounter] = true;
-        //                }
-        //                else
-        //                {
-        //                    flattenedFitnessGrid[flattenedGridCounter] = false;
-        //                }
-
-        //                currentBlockInGrid += 1;
-        //                flattenedGridCounter++;
-        //            }
-
-        //            //move to next row in the z position
-        //            currentBlockInGrid += gridWLH - 20;
-        //        }
-        //    }
-
-        //    return flattenedFitnessGrid;
-        //}
+        
 
         #endregion
     }

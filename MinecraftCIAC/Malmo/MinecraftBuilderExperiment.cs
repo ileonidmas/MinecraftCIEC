@@ -72,10 +72,7 @@ namespace MinecraftCIAC.Malmo
 
         /// <summary>
         /// Defines whether all networks should be evaluated every
-        /// generation, or only new (child) networks. For Tic-Tac-Toe,
-        /// we're evolving against a random player, so it's a good
-        /// idea to evaluate individuals again every generation,
-        /// to make sure it wasn't just luck.
+        /// generation, or only new (child) networks. 
         /// </summary>
         public override bool EvaluateParents
         {

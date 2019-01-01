@@ -267,18 +267,6 @@ namespace MinecraftCIAC.Controllers
                 HttpContext.Session.Add("branchId", "-1");
                 return View("FirstEvolution", evolutions);
             }
-
-
-            // do loading screen here
-
-            
-
-
-            //TempData["msg"] = "<script>alert('Happy thoughts');</script>";
-
-           
-
-            
             return View(evolutions);
         }
 
@@ -333,122 +321,11 @@ namespace MinecraftCIAC.Controllers
                 evolutions.Add(evolution);
             }
 
-            //TempData["msg"] = "<script>alert('"+sequence+"');</script>";
             if (sequence== null)
                 return View("FirstEvolution", evolutions);
             return View("Evolve", evolutions);
         }
-
-        //public ActionResult Test()
-        //{
-            
-        //    Environment.SetEnvironmentVariable("MALMO_XSD_PATH", @"C:\inetpub\wwwroot\MyApp\MalmoSource\Schemas", System.EnvironmentVariableTarget.User);
-        //    //System.Environment.SetEnvironmentvariable("MALMO_XSD_PATH", @"C:\Users\lema\Desktop\School\Malmo\Schemas", System.EnvironmentvariableTarget.user)
-        //    AgentHost agentHost = new AgentHost();
-        //    AgentHelper agentHelper = new AgentHelper(agentHost);
-        //    float startX = -230.5f, startY = 227.5f, startZ = -555.5f;
-        //    string xml;
-        //    xml = System.IO.File.ReadAllText("C:\\inetpub\\wwwroot\\MyApp\\bin\\myworld1.xml");
-
-        //    MissionSpec mission = new MissionSpec(xml, false);
-        //    mission.setModeToCreative();
-        //    MissionRecordSpec missionRecord = new MissionRecordSpec();
-        //    missionRecord.recordCommands();
-        //    // missionRecord.recordMP4(20, 400000);
-        //    //missionRecord.recordRewards();
-        //    missionRecord.recordObservations();
-        //    bool connected = false;
-        //    int attempts = 0;
-        //    while (!connected)
-        //    {
-        //        try
-        //        {
-        //            attempts += 1;
-        //            agentHost.startMission(mission, missionRecord);
-        //            connected = true;
-        //        }
-        //        catch (MissionException ex)
-        //        {
-        //            // Using catch(Exception ex) would also work, but specifying MissionException allows
-        //            // us to access the error code:
-        //            Console.Error.WriteLine("Error starting mission: {0}", ex.Message);
-        //            Console.Error.WriteLine("Error code: {0}", ex.getMissionErrorCode());
-        //            // We can do more specific error handling using this code, eg:
-        //            if (ex.getMissionErrorCode() == MissionException.MissionErrorCode.MISSION_INSUFFICIENT_CLIENTS_AVAILABLE)
-        //                Console.Error.WriteLine("Have you started a Minecraft client?");
-        //            if (attempts >= 3)   // Give up after three goes.
-        //                Environment.Exit(1);
-        //            Thread.Sleep(1000); // Wait a second and try again.
-        //        }
-        //    }
-        //    WorldState worldState;
-
-        //    Console.WriteLine("Waiting for the mission to start");
-        //    do
-        //    {
-        //        Console.Write(".");
-        //        Thread.Sleep(100);
-        //        worldState = agentHost.getWorldState();
-
-        //        foreach (TimestampedString error in worldState.errors) Console.Error.WriteLine("Error: {0}", error.text);
-        //    }
-        //    while (!worldState.has_mission_begun);
-
-        //    Console.WriteLine();
-
-
-        //    Thread.Sleep(1000);
-
-        //    bool runonce = false;
-
-        //    do
-        //    {
-        //        try
-        //        {
-        //            if (!runonce)
-        //            {
-
-        //                resetConstantPosition(agentHost, agentHelper);
-        //                agentHelper.PlaceBlockAbsolute(Direction.Front);
-
-        //                resetConstantPosition(agentHost, agentHelper);
-        //                agentHelper.Teleport(Direction.Left);
-
-        //                resetConstantPosition(agentHost, agentHelper);
-        //                agentHelper.Teleport(Direction.Left);
-
-        //                resetConstantPosition(agentHost, agentHelper);
-        //                agentHelper.Teleport(Direction.Left);
-
-        //                resetConstantPosition(agentHost, agentHelper);
-        //                agentHelper.Teleport(Direction.Left);
-
-        //                resetConstantPosition(agentHost, agentHelper);
-        //                agentHelper.PlaceBlockAbsolute(Direction.Under);
-        //                resetConstantPosition(agentHost, agentHelper);
-        //                agentHelper.DestroyBlockAbsolute(Direction.Under);
-        //                runonce = true;
-        //            }
-
-        //        }
-        //        catch (ArgumentOutOfRangeException ex)
-        //        {
-        //        }
-        //        foreach (TimestampedReward reward in worldState.rewards) Console.Error.WriteLine("Summed reward: {0}", reward.getValue());
-        //        foreach (TimestampedString error in worldState.errors) Console.Error.WriteLine("Error: {0}", error.text);
-        //    }
-        //    while (worldState.is_mission_running);
-        //    //Console.ReadKey();
-        //    return RedirectToAction("Index");
-        //}
-
-        //private static void resetConstantPosition(AgentHost agentHost, AgentHelper agentHelper)
-        //{
-        //    WorldState worldState = agentHost.getWorldState();
-        //    agentHelper.ConstantObservations = worldState.observations;
-        //}
-
-
+        
         public ActionResult Return()
         {
             return RedirectToAction("Index");
@@ -472,24 +349,6 @@ namespace MinecraftCIAC.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Evolution evo = db.Evolutions.Find(id);
-            if (evo == null)
-            {
-                return HttpNotFound();
-            }
-
-            db.Evolutions.Remove(evo);
-            db.SaveChanges();
-            FileUtility.DeleteDirectory(evo.DirectoryPath);
-            return RedirectToAction("Index");
-        }
-
        
 
         protected override void Dispose(bool disposing)

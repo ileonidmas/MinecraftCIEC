@@ -73,7 +73,6 @@ namespace MinecraftCIAC.Malmo
                      continue;
                 }
                 neatPlayer.AgentHelper.ConstantObservations = worldState.observations;
-                //neatPlayer.UpdateFitness();
                 neatPlayer.PerformAction();
 
                 //Get end position and fitness grid after every performed action by the agent
@@ -109,10 +108,6 @@ namespace MinecraftCIAC.Malmo
             return neatPlayer.AgentHelper.FitnessGrid;
         }
 
-        public AgentPosition GetAgentPosition()
-        {
-            return neatPlayer.AgentHelper.AgentPosition;
-        }
 
         private void InitializeMission()
         {
@@ -180,23 +175,10 @@ namespace MinecraftCIAC.Malmo
             {
             string errorLine = "Fatal error when starting a mission in ProgramMalmo: " + ex.Message;
             Console.WriteLine("Error starting mission: {0}", ex.Message);
-            FileUtility.writeToFileIISDebug(ex.ToString());
             Environment.Exit(1);
             } 
         }
 
-        private string SaferRead(string path)
-        {
-            string newFile = null;
-            using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    newFile = reader.ReadToEnd();
-                }
-            }
-            return newFile;
-        }
 
         private void CreateWorld()
         {
