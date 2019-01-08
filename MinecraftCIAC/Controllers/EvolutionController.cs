@@ -106,6 +106,18 @@ namespace MinecraftCIAC.Controllers
                     while (offSprings.Count != GloabalVariables.POPULATION_SIZE)
                         offSprings.Add(parent.CreateOffspring(parent.BirthGeneration));
 
+                    //save fitness of current generation
+                    double maxFitness = -1;
+                    for (int i = 0; i < GloabalVariables.POPULATION_SIZE; i++)
+                    {
+                        string folderName = i.ToString();
+                        double currentStructureFitness = FileUtility.GetStructureFitness(username, folderName);
+                        if (currentStructureFitness > maxFitness)
+                            maxFitness = currentStructureFitness;
+                    }
+                    FileUtility.SaveMaxFitness(username, maxFitness);
+
+
                     reader.Close();
 
                     // add novel structure to archive
@@ -146,7 +158,7 @@ namespace MinecraftCIAC.Controllers
                     // Save population after evaluating the generation
                     string action = "2";
                     string sequence = HttpContext.Session["sequence"].ToString();
-                    HttpContext.Session.Add("sequence", sequence + action);
+                    HttpContext.Session.Add("sequence", sequence + action);                    
                     for (int i = 0; i < algorithm.GenomeList.Count; i++)
                     {
                         string folderName = i.ToString();
@@ -155,17 +167,18 @@ namespace MinecraftCIAC.Controllers
                             videoPath = FileUtility.GetVideoPathWithoutDecoding(username, folderName);
                         else
                             videoPath = FileUtility.DecodeArchiveAndGetVideoPath(username, folderName);
+
                         Evolution evolution = new Evolution() { ID = i, DirectoryPath = FileUtility.GetUserResultVideoPath(username, folderName), BranchID = i, Username = HttpContext.Session["userId"].ToString() };
                         evolutions.Add(evolution);
                     }
-
 
                 }
                 else
                 {
                     //IEC
 
-                    if(fitness == 1)
+                    
+                    if (fitness == 1)
                     {
                         experiment.Initialize("Small mutation", xmlConfig.DocumentElement);
                     } else if(fitness == 2)
@@ -188,6 +201,18 @@ namespace MinecraftCIAC.Controllers
 
                     // Initialize algorithm object using the current generation
                     algorithm = experiment.CreateEvolutionAlgorithm(list[0].GenomeFactory, list);
+
+                    //save fitness of current generation
+                    double maxFitness = -1;
+                    for (int i = 0; i < algorithm.GenomeList.Count; i++)
+                    {
+                        string folderName = i.ToString();
+                        double currentStructureFitness = FileUtility.GetStructureFitness(username, folderName);
+                        if (currentStructureFitness > maxFitness)
+                            maxFitness = currentStructureFitness;
+                    }
+                    FileUtility.SaveMaxFitness(username, maxFitness);
+
 
                     // Copy video files of the generation champion into the parent folder and delete the other 
                     // folders to allow for new candidate videos
@@ -224,7 +249,6 @@ namespace MinecraftCIAC.Controllers
                         action = "1";
                     string sequence = HttpContext.Session["sequence"].ToString();
                     HttpContext.Session.Add("sequence", sequence + action);
-
                     for (int i = 0; i < algorithm.GenomeList.Count; i++)
                     {
                         string folderName = i.ToString();
@@ -237,6 +261,7 @@ namespace MinecraftCIAC.Controllers
                         evolutions.Add(evolution);
                         FileUtility.SaveCurrentGenome(username, i.ToString(), algorithm.GenomeList[i]);
                     }
+
 
                 }
             } else

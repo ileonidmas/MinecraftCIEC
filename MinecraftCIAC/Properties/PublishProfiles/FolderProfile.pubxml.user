@@ -82,10 +82,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/13/2017 14:04:08</publishTime>
     </File>
     <File Include="bin/MinecraftCIAC.dll">
-      <publishTime>12/27/2018 13:22:09</publishTime>
+      <publishTime>01/08/2019 14:02:18</publishTime>
     </File>
     <File Include="bin/MinecraftCIAC.pdb">
-      <publishTime>12/27/2018 13:22:09</publishTime>
+      <publishTime>01/08/2019 14:02:18</publishTime>
     </File>
     <File Include="bin/netstandard.dll">
       <publishTime>12/13/2017 14:04:08</publishTime>

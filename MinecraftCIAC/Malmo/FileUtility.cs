@@ -59,6 +59,21 @@ namespace MinecraftCIAC.Malmo
             return videoPath;
         }
 
+        public static double GetStructureFitness(string username, string foldername)
+        {
+            string path = resultsPath + "/" + username + "/" + foldername + "/fitness.txt";
+            double fitness = 0;
+            using (StreamReader sw = new StreamReader(path))
+            {
+                // Run through the structure grid and save all values to the file
+                
+                var temp =sw.ReadLine();
+                fitness = double.Parse(temp);
+                sw.Close();
+            }
+            return fitness;
+        }
+
         public static string DecodeArchiveAndGetVideoPath(string username, string foldername)
         {
             string fullPath = resultsPath + "/" + username + "/" + foldername + "/";
@@ -221,6 +236,17 @@ namespace MinecraftCIAC.Malmo
                         sw.Write("0");
                 }
                 sw.WriteLine();
+                sw.Close();
+            }
+        }
+
+        public static void SaveMaxFitness(string username, double fitness)
+        {
+            string path = resultsPath + "/" + username + "/" + "/fitnessSequence.txt";
+            using (StreamWriter sw = new StreamWriter(path,true))
+            {
+                // Run through the structure grid and save all values to the file                
+                sw.WriteLine(fitness.ToString());
                 sw.Close();
             }
         }
