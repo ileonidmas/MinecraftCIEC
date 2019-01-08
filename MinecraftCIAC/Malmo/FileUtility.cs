@@ -225,6 +225,17 @@ namespace MinecraftCIAC.Malmo
             }
         }
 
+        public static void SaveCurrentFitness(string username, string foldername, double fitness)
+        {
+            string path = resultsPath + "/" + username + "/" + foldername + "/fitness.txt";
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                // Run through the structure grid and save all values to the file                
+                sw.WriteLine(fitness.ToString());
+                sw.Close();
+            }
+        }
+
         public static void SaveCurrentGenome(string username, string foldername, NeatGenome genome)
         {
             List<NeatGenome> list = new List<NeatGenome>();

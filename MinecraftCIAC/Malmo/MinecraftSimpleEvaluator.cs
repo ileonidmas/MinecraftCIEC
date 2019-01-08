@@ -3,6 +3,7 @@ using SharpNeat.Genomes.Neat;
 using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -78,7 +79,8 @@ namespace MinecraftCIAC.Malmo
             // save structure
 
             FileUtility.SaveCurrentStructure(username, foldername, clientInfo);
-                       
+            FileUtility.SaveCurrentFitness(username, foldername, getGridFitness(clientInfo));
+
             // Return the fitness score
             return new FitnessInfo(0, 0);
         }
@@ -89,6 +91,55 @@ namespace MinecraftCIAC.Malmo
         /// </summary>
         public void Reset()
         {
+        }
+
+        private double getGridFitness(bool[] strutureGrid)
+        {
+            return calculateFitnessWall(strutureGrid);
+        }
+
+        //Fitness function for calculating fitness of building a wall
+        private double calculateFitnessWall(bool[] fitnessGrid)
+        {
+            int fitness = 0;
+
+            for (int i = 0; i < fitnessGrid.Length; i++)
+            {
+                if (fitnessGrid[i] == true)
+                {
+                    //Console.WriteLine(i);
+                    //fitness += 1 + (i / (20 * 20));
+                    fitness += 1;
+
+                    // check if something is on top of block i
+                    if (i + 400 % (20 * 20 * 20) != 0)
+                        if (fitnessGrid[i + 400] == true)
+                            fitness += 1;
+
+                    // check if something is on the right side of the block i
+                    if ((i + 1) % 20 != 0)
+                        if (fitnessGrid[i + 1] == true)
+                            fitness += 2;
+
+                    // check if something is on the left side of the block i
+                    if (i % 20 != 0)
+                        // check if something is on the left
+                        if (fitnessGrid[i - 1] == true)
+                            fitness += 2;
+
+                    // check if something is on top of block i + 1
+                    if ((i + 400 + 1) % 20 != 0)
+                        if (fitnessGrid[i + 400 + 1] == true)
+                            fitness += 3;
+
+                    // check if something is on top of block i - 1
+                    if ((i + 400 - 1) % 20 != 0)
+                        if (fitnessGrid[i + 400 - 1] == true)
+                            fitness += 3;
+                }
+            }
+
+            return fitness;
         }
     }
 }

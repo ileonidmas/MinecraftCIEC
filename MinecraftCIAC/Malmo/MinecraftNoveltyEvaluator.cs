@@ -113,6 +113,7 @@ namespace MinecraftCIAC.Malmo
 
                         FileUtility.SaveCurrentGenome(username, foldername, genome);
                         FileUtility.SaveCurrentStructure(username, foldername, structureGrid);
+                        FileUtility.SaveCurrentFitness(username, foldername, getGridFitness(structureGrid));
                         FileUtility.SaveNovelStructure(username, foldername);
                         FileUtility.CopyCanditateToProperFolder(username, foldername, counter.ToString());
                         Console.WriteLine(noveltyDistance);
@@ -219,8 +220,55 @@ namespace MinecraftCIAC.Malmo
             }
 
         }
-        
-
         #endregion
+
+        private double getGridFitness(bool[] strutureGrid)
+        {
+            return calculateFitnessWall(strutureGrid);
+        }
+
+        //Fitness function for calculating fitness of building a wall
+        private double calculateFitnessWall(bool[] fitnessGrid)
+        {
+            int fitness = 0;
+
+            for (int i = 0; i < fitnessGrid.Length; i++)
+            {
+                if (fitnessGrid[i] == true)
+                {
+                    //Console.WriteLine(i);
+                    //fitness += 1 + (i / (20 * 20));
+                    fitness += 1;
+
+                    // check if something is on top of block i
+                    if (i + 400 % (20 * 20 * 20) != 0)
+                        if (fitnessGrid[i + 400] == true)
+                            fitness += 1;
+
+                    // check if something is on the right side of the block i
+                    if ((i + 1) % 20 != 0)
+                        if (fitnessGrid[i + 1] == true)
+                            fitness += 2;
+
+                    // check if something is on the left side of the block i
+                    if (i % 20 != 0)
+                        // check if something is on the left
+                        if (fitnessGrid[i - 1] == true)
+                            fitness += 2;
+
+                    // check if something is on top of block i + 1
+                    if ((i + 400 + 1) % 20 != 0)
+                        if (fitnessGrid[i + 400 + 1] == true)
+                            fitness += 3;
+
+                    // check if something is on top of block i - 1
+                    if ((i + 400 - 1) % 20 != 0)
+                        if (fitnessGrid[i + 400 - 1] == true)
+                            fitness += 3;
+                }
+            }
+
+            return fitness;
+        }
     }
 }
